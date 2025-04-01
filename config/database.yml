@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: <%= ENV['DATABASE_URL'] %>  # Usando la variable de entorno DATABASE_URL
+
+test:
+  <<: *default
+  database: adoption_application_test  # Base de datos para el entorno de pruebas
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: adoption_application_production
+    username: adoption_application
+    password: <%= ENV['ADOPTION_APPLICATION_DATABASE_PASSWORD'] %>  # Variable de entorno para la contraseña

@@ -1,0 +1,34 @@
+<h1>Panel de Administración</h1>
+
+<section>
+  <h2>Solicitudes de Adopción Pendientes</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Mascota</th>
+        <th>Usuario</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pending_applications.each do |app| %>
+        <tr>
+          <td><%= link_to app.pet.name, app.pet %></td>
+          <td><%= app.user.email %></td>
+          <td><%= l app.created_at, format: :short %></td>
+          <td>
+            <%= link_to 'Ver', adoption_application_path(app), class: 'btn btn-sm btn-info' %>
+            <%= link_to 'Aprobar', approve_adoption_application_path(app), method: :patch, class: 'btn btn-sm btn-success' %>
+            <%= link_to 'Rechazar', reject_adoption_application_path(app), method: :patch, class: 'btn btn-sm btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Administrar Mascotas</h2>
+  <%= link_to 'Añadir nueva mascota', new_pet_path, class: 'btn btn-primary' %>
+</section>

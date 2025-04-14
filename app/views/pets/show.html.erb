@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title"><%= @pet.name %></h1>
+      
+      <% if @pet.image.attached? %>
+        <%= image_tag @pet.image.variant(resize_to_limit: [400, 400]), class: "img-fluid rounded mb-4" %>
+      <% end %>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Raza:</strong> <%= @pet.breed %></p>
+          <p><strong>Edad:</strong> <%= @pet.age %> años</p>
+          <p><strong>Tipo:</strong> <%= @pet.pet_type.titleize %></p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Estado:</strong> <span class="badge bg-<%= @pet.status == 'available' ? 'success' : 'warning' %>">
+            <%= @pet.status.titleize %>
+          </span></p>
+          <% if @pet.description.present? %>
+            <p><strong>Descripción:</strong></p>
+            <p><%= @pet.description %></p>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <%= link_to 'Volver', pets_path, class: 'btn btn-outline-secondary' %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mis Donaciones</h2>
+    <%= link_to "Donar", new_donation_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @donations.empty? %>
+    <div class="text-center py-5">
+      <p class="mb-4">No has realizado ninguna donación aún.</p>
+      <%= link_to "Hacer mi primera donación", new_donation_path, class: "btn btn-success btn-lg" %>
+    </div>
+  <% else %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Monto</th>
+          <th>Tipo</th>
+          <th>Método de Pago</th>
+          <th>Comprobante</th>
+          <th>Mensaje</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @donations.each do |don| %>
+          <tr>
+            <td><%= number_to_currency(don.amount) %></td>
+            <td><%= don.donation_type&.humanize || "No especificado" %></td>
+            <td><%= don.payment_method&.humanize || "No especificado" %></td>
+            <td>
+              <% if don.payment_proof.attached? %>
+                <%= link_to "Ver Comprobante", 
+                    rails_blob_path(don.payment_proof, disposition: "attachment"),
+                    class: "btn btn-sm btn-outline-primary" %>
+              <% else %>
+                <span class="text-muted">Sin comprobante</span>
+              <% end %>
+            </td>
+            <td><%= don.description.presence || "–" %></td>
+            <td><%= don.status&.humanize || "Pendiente" %></td>
+            <td><%= l(don.created_at, format: :short) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

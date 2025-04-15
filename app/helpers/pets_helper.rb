@@ -1,19 +1,26 @@
 module PetsHelper
-  def pet_image_url(pet, size: '300x200')
-    if pet.image.attached?
-      pet.image.variant(resize_to_fill: size.split('x').map(&:to_i))
+  def default_pet_image_url(pet_type, size: '400x300')
+    default_images = {
+      dog: 'default/default_dog.jpg',
+      cat: 'default/default_cat.jpg',
+      other: 'default/default_pet.jpg'
+    }
+    
+    image_path = default_images[pet_type.to_sym] || default_images[:other]
+    
+    if asset_exists?(image_path)
+      asset_path(image_path)
     else
-      default_pet_image_url(pet.pet_type, size: size)
+      # Fallback (opcional)
+      "https://placedog.net/400/300?random=#{rand(1000)}"
     end
   end
-
-  def default_pet_image_url(pet_type, size: '300x200')
-    width, height = size.split('x')
-    case pet_type.to_sym
-    when :dog then "https://placedog.net/#{width}/#{height}?random=#{rand(1000)}"
-    when :cat then "https://placekitten.com/#{width}/#{height}?random=#{rand(1000)}"
-    when :guinea_pig then "https://loremflickr.com/#{width}/#{height}/guineapig?random=#{rand(1000)}"
-    else "https://loremflickr.com/#{width}/#{height}/animal?random=#{rand(1000)}"
-    end
+  
+  private
+  
+  def asset_exists?(path)
+    Rails.application.assets&.find_asset(path).present?
+  rescue
+    false
   end
 end

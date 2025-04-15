@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_07_211228) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_15_005521) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,13 +55,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_211228) do
   end
 
   create_table "donations", force: :cascade do |t|
-    t.bigint "user_id"
-    t.integer "donation_type"
-    t.decimal "amount"
+    t.bigint "user_id", null: false
+    t.string "donation_type", default: "0", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
     t.text "description"
-    t.integer "status", default: 0
+    t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "payment_method"
     t.index ["user_id"], name: "index_donations_on_user_id"
   end
 

@@ -1,6 +1,6 @@
 <div class="card h-100 shadow-sm">
   <div class="pet-image-container" style="height: 200px; overflow: hidden; position: relative;">
-    <%= image_tag pet_image_url(pet), class: "card-img-top h-100 w-100", style: "object-fit: cover;" %>
+    <%= image_tag default_pet_image_url(:dog), class: "card-img-top h-100 w-100", style: "object-fit: cover;" %>
     
     <% if pet.status != "available" %>
       <span class="position-absolute top-0 start-0 badge bg-danger m-2">

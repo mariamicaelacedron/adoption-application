@@ -4,10 +4,12 @@ class PetsController < ApplicationController
   before_action :authorize_admin, only: [:new, :create, :edit, :update, :destroy]
 
   def index
-    @dogs = Pet.dog.available.with_attached_image
-    @cats = Pet.cat.available.with_attached_image
-    @guinea_pigs = Pet.guinea_pig.available.with_attached_image
-    @others = Pet.other.available.with_attached_image
+    @pets_by_type = {
+      dog: Pet.dog.available.with_attached_image,
+      cat: Pet.cat.available.with_attached_image,
+      guinea_pig: Pet.guinea_pig.available.with_attached_image,
+      other: Pet.other.available.with_attached_image
+    }
   end
 
   def show

@@ -1,6 +1,8 @@
 class Pet < ApplicationRecord
   has_many :adoption_applications, dependent: :destroy
   has_many :applicants, through: :adoption_applications, source: :user
+  scope :available, -> { where(status: :available) }
+  scope :by_type, ->(type) { where(pet_type: type) }
   
   enum :pet_type, [:dog, :cat, :guinea_pig, :other], default: :dog
   enum :status, [:available, :pending_adoption, :adopted], default: :available

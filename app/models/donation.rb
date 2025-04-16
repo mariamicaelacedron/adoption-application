@@ -5,11 +5,8 @@ class Donation < ApplicationRecord
 
   enum :donation_type, {dinero: 'dinero', alimento: 'alimento', medicinas: 'medicinas', otros: 'otros'}, default: 'dinero'
 
-  enum :status, {
-    pendiente: 'pendiente',
-    completado: 'completado',
-    cancelado: 'cancelado'
-  }, default: 'pendiente'
+  enum :status, { pendiente: 'pendiente', completado: 'completado', cancelado: 'cancelado' }, default: 'pendiente'
+
 
   validates :donation_type, presence: true
   validates :status, presence: true
@@ -18,4 +15,5 @@ class Donation < ApplicationRecord
   validates :payment_proof, 
             content_type: ['image/png', 'image/jpeg', 'application/pdf'],
             size: { less_than: 5.megabytes }
+
 end

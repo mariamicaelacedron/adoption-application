@@ -1,30 +1,18 @@
-<h1 class="text-center my-4">Mascotas disponibles para adopción</h1>
+<div class="container mt-4">
+  <h1 class="mb-4">Mascotas Disponibles para Adopción</h1>
 
-<div class="container">
-  <% { dog: 'Perros', cat: 'Gatos', guinea_pig: 'Cobayos', other: 'Otras mascotas' }.each do |type, title| %>
-    <section class="mb-5">
-      <h2 class="mb-4 border-bottom pb-2"><%= title %></h2>
-      <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-        <% if @pets_by_type[type].any? %>
-          <% @pets_by_type[type].each do |pet| %>
-            <div class="col">
-              <%= render 'pet_card', pet: pet %>
-            </div>
-          <% end %>
-        <% else %>
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body text-center py-5">
-                <%= image_tag default_pet_image_url(type, size: '400x300'), class: "img-fluid rounded mb-3" %>
-                <h4 class="text-muted">No hay <%= title.downcase %> disponibles actualmente</h4>
-                <% if user_signed_in? && current_user.admin? %>
-                  <%= link_to 'Añadir nueva mascota', new_pet_path(pet_type: type), class: 'btn btn-primary mt-3' %>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </section>
+  <% if @pets.empty? %>
+    <div class="alert alert-info text-center">
+      <h4>Actualmente no tenemos mascotas disponibles</h4>
+      <p>Vuelve a visitarnos pronto o contáctanos para más información.</p>
+    </div>
+  <% else %>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% @pets.each do |pet| %>
+        <div class="col">
+          <%= render 'pet_card', pet: pet %>
+        </div>
+      <% end %>
+    </div>
   <% end %>
 </div>

@@ -31,28 +31,34 @@
         </ul>
         
         <ul class="navbar-nav">
-          <% if user_signed_in? %>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                <i class="bi bi-person-circle me-1"></i> Mi cuenta
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li><%= link_to 'Mis donaciones', donations_path, class: 'dropdown-item' %></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><%= link_to 'Cerrar sesión', destroy_user_session_path, 
-                              class: 'dropdown-item text-danger', 
-                              data: { turbo_method: :delete } %></li>
-              </ul>
-            </li>
-          <% else %>
-            <li class="nav-item">
-              <%= link_to 'Iniciar sesión', new_user_session_path, class: 'nav-link' %>
-            </li>
-            <li class="nav-item ms-2">
-              <%= link_to 'Registrarse', new_user_registration_path, class: 'btn btn-outline-light' %>
-            </li>
-          <% end %>
-        </ul>
+  <% if user_signed_in? %>
+    <% if current_user.admin? %>
+      <li class="nav-item">
+        <%= link_to 'Admin', admin_pets_path, class: 'nav-link' %>
+      </li>
+    <% end %>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+        <i class="bi bi-person-circle me-1"></i> Mi cuenta
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><%= link_to 'Mis donaciones', donations_path, class: 'dropdown-item' %></li>
+        <% if current_user.admin? %>
+          <li><%= link_to 'Panel Admin', admin_pets_path, class: 'dropdown-item' %></li>
+        <% end %>
+        <li><hr class="dropdown-divider"></li>
+        <li><%= button_to 'Cerrar sesión', destroy_user_session_path, method: :delete, form: { class: 'd-inline' }, class: 'dropdown-item text-danger bg-transparent border-0' %></li>
+      </ul>
+    </li>
+  <% else %>
+    <li class="nav-item">
+      <%= link_to 'Iniciar sesión', new_user_session_path, class: 'nav-link' %>
+    </li>
+    <li class="nav-item ms-2">
+      <%= link_to 'Registrarse', new_user_registration_path, class: 'btn btn-outline-light' %>
+    </li>
+  <% end %>
+</ul>
       </div>
     </div>
   </nav>

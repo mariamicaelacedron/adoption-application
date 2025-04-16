@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_15_005521) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_16_202428) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,7 +59,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_005521) do
     t.string "donation_type", default: "0", null: false
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.text "description"
-    t.integer "status"
+    t.string "status", default: "pendiente", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "payment_method"
@@ -72,8 +72,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_005521) do
     t.integer "age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "pet_type", default: 0
-    t.integer "status", default: 0
+    t.integer "pet_type", default: 3, null: false
+    t.string "status", default: "0"
     t.text "description"
     t.string "gender"
     t.string "size"

@@ -1,26 +1,22 @@
 module PetsHelper
-  def default_pet_image_url(pet_type, size: '400x300')
-    default_images = {
-      dog: 'default/default_dog.jpg',
-      cat: 'default/default_cat.jpg',
-      other: 'default/default_pet.jpg'
-    }
+  def pet_status_badge(status)
+    # Convierte a string y luego a símbolo, con valor por defecto
+    status_key = status.to_s.presence || 'pending'
     
-    image_path = default_images[pet_type.to_sym] || default_images[:other]
-    
-    if asset_exists?(image_path)
-      asset_path(image_path)
-    else
-      # Fallback (opcional)
-      "https://placedog.net/400/300?random=#{rand(1000)}"
+    case status_key.to_sym
+    when :available then 'success'
+    when :adopted then 'secondary'
+    when :pending then 'warning'
+    else 'info'
     end
   end
-  
-  private
-  
-  def asset_exists?(path)
-    Rails.application.assets&.find_asset(path).present?
-  rescue
-    false
+  def display_pet_type(pet)
+    case pet.pet_type
+    when 0 then 'Perro'
+    when 1 then 'Gato'
+    when 2 then 'Cobaya'
+    when 3 then 'Otro'
+    else 'No especificado'
+    end
   end
 end

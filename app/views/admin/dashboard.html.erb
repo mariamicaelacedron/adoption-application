@@ -19,8 +19,8 @@
           <td><%= l app.created_at, format: :short %></td>
           <td>
             <%= link_to 'Ver', adoption_application_path(app), class: 'btn btn-sm btn-info' %>
-            <%= link_to 'Aprobar', approve_adoption_application_path(app), method: :patch, class: 'btn btn-sm btn-success' %>
-            <%= link_to 'Rechazar', reject_adoption_application_path(app), method: :patch, class: 'btn btn-sm btn-danger' %>
+            <%= link_to 'Aprobar', approve_adoption_path(app), method: :patch, class: 'btn btn-sm btn-success' %>
+            <%= link_to 'Rechazar', reject_adoption_path(app), method: :patch, class: 'btn btn-sm btn-danger' %>
           </td>
         </tr>
       <% end %>

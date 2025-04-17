@@ -1,5 +1,6 @@
 class Pet < ApplicationRecord
   has_one_attached :image
+  has_many :adoptions, dependent: :destroy
 
   enum :pet_type, {
     dog: 0,

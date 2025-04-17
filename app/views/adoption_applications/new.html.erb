@@ -1,6 +1,6 @@
 <h2>Solicitud de adopción para <%= @pet.name %></h2>
 
-<%= form_with(model: [@pet, @application], local: true) do |form| %>
+<%= form_with(model: [@pet, @adoption], local: true) do |form| %>
   <div class="mb-3">
     <%= form.label :application_text, "Por qué quieres adoptar a #{@pet.name}?", class: "form-label" %>
     <%= form.text_area :application_text, class: "form-control", rows: 5, required: true %>

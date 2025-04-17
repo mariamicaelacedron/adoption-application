@@ -12,11 +12,11 @@ Rails.application.routes.draw do
 
   # Rutas públicas para mascotas
   resources :pets, only: [:index, :show] do
-    resources :adoption_applications, only: [:new, :create, :index]
+    resources :adoptions, only: [:new, :create, :index]
   end
 
   # Rutas para adopciones
-  resources :adoption_applications, only: [:show, :destroy] do
+  resources :adoptions, only: [:show, :destroy] do
     member do
       patch :approve
       patch :reject

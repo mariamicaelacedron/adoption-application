@@ -35,6 +35,18 @@
         <% if current_user&.admin? %>
           <%= link_to 'Editar', edit_admin_pet_path(@pet), class: 'btn btn-primary' %>
         <% end %>
+        
+        <% if current_user && !current_user.admin? %>
+          <% if @pet.adoptions.where(user_id: current_user.id, status: 'pending').exists? %>
+            <span class="btn btn-warning disabled">Solicitud pendiente</span>
+          <% elsif @pet.adoptions.where(user_id: current_user.id, status: 'approved').exists? %>
+            <span class="btn btn-success disabled">Adopción aprobada</span>
+          <% elsif @pet.adoptions.where(user_id: current_user.id, status: 'rejected').exists? %>
+            <span class="btn btn-danger disabled">Solicitud rechazada</span>
+          <% else %>
+            <%= link_to 'Solicitar Adopción', new_pet_adoption_path(@pet), class: 'btn btn-success' %>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

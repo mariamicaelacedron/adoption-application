@@ -1,6 +1,7 @@
 class AdoptionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
+  before_action :check_existing_adoption, only: [:new]
 
   def new
     @adoption = @pet.adoptions.new(
@@ -29,5 +30,11 @@ class AdoptionsController < ApplicationController
 
   def adoption_params
     params.require(:adoption).permit(:full_name, :phone, :email, :reason)
+  end
+
+  def check_existing_adoption
+    if @pet.adoptions.exists?(user_id: current_user.id)
+      redirect_to @pet, alert: 'Ya tienes una solicitud pendiente para esta mascota'
+    end
   end
 end

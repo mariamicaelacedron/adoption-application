@@ -1,0 +1,73 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h5 mb-0">Solicitud de Adopción</h2>
+        </div>
+        
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h3 class="h5">Información de la Mascota</h3>
+              <p><strong>Nombre:</strong> <%= link_to @pet.name, pet_path(@pet) %></p>
+              <p><strong>Tipo:</strong> <%= @pet.pet_type.titleize %></p>
+              <p><strong>Raza:</strong> <%= @pet.breed %></p>
+              <p><strong>Edad:</strong> <%= @pet.age %> años</p>
+            </div>
+            
+            <div class="col-md-6">
+              <h3 class="h5">Información del Solicitante</h3>
+              <p><strong>Nombre:</strong> <%= @adoption.full_name %></p>
+              <p><strong>Email:</strong> <%= @adoption.email %></p>
+              <p><strong>Teléfono:</strong> <%= @adoption.phone %></p>
+              <p><strong>Fecha solicitud:</strong> <%= l(@adoption.created_at, format: :long) %></p>
+              <p>
+                <strong>Estado:</strong>
+                <span class="badge bg-<%= adoption_status_badge(@adoption.status) %>">
+                  <%= @adoption.status.titleize %>
+                </span>
+              </p>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h3 class="h5">Motivos de la Adopción</h3>
+            <div class="card bg-light">
+              <div class="card-body">
+                <%= simple_format(@adoption.reason) %>
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-flex gap-2">
+            <%= link_to 'Volver', admin_adoptions_path, class: 'btn btn-outline-secondary' %>
+            
+            <% unless @adoption.approved? %>
+              <%= button_to 'Aprobar Solicitud', approve_admin_adoption_path(@adoption),
+                  method: :post, class: 'btn btn-success', data: { confirm: '¿Estás seguro de aprobar esta solicitud?' } %>
+            <% end %>
+            
+            <% unless @adoption.rejected? %>
+              <%= button_to 'Rechazar Solicitud', reject_admin_adoption_path(@adoption),
+                  method: :post, class: 'btn btn-danger', data: { confirm: '¿Estás seguro de rechazar esta solicitud?' } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card shadow">
+        <div class="card-header bg-info text-white">
+          <h2 class="h5 mb-0">Acciones Rápidas</h2>
+        </div>
+        <div class="card-body">
+          <%= link_to 'Ver todas las solicitudes', admin_adoptions_path, class: 'btn btn-outline-primary w-100 mb-2' %>
+          <%= link_to 'Ver mascota', pet_path(@pet), class: 'btn btn-outline-success w-100 mb-2' %>
+          <%= link_to 'Editar mascota', edit_admin_pet_path(@pet), class: 'btn btn-outline-warning w-100' if current_user.admin? %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

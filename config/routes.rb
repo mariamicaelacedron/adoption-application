@@ -47,6 +47,12 @@ Rails.application.routes.draw do
       end
     end
     resources :adoption_applications, only: [:index]
+    resources :adoptions, only: [:index, :show] do
+      member do
+        post :approve
+        post :reject
+      end
+    end
   end
 
 

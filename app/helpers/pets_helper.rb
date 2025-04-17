@@ -1,13 +1,24 @@
 module PetsHelper
-  def pet_status_badge(status)
-    # Convierte a string y luego a símbolo, con valor por defecto
-    status_key = status.to_s.presence || 'pending'
-    
-    case status_key.to_sym
-    when :available then 'success'
-    when :adopted then 'secondary'
-    when :pending then 'warning'
-    else 'info'
+  def pet_status_badge(pet_or_status)
+    # Si recibe un objeto Pet completo
+    if pet_or_status.respond_to?(:adopted?)
+      pet = pet_or_status
+      if pet.adopted?
+        ['info', 'Adoptada']
+      elsif pet.status == 'pending_adoption'
+        ['warning', 'Pendiente']
+      else
+        ['success', 'Disponible']
+      end
+    # Si recibe solo el status (para compatibilidad con código existente)
+    else
+      status = pet_or_status.to_s
+      case status
+      when 'available' then ['success', 'Disponible']
+      when 'pending_adoption' then ['warning', 'Pendiente']
+      when 'adopted' then ['info', 'Adoptada']
+      else ['secondary', 'No especificado']
+      end
     end
   end
   def display_pet_type(pet)

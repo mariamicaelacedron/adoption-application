@@ -2,18 +2,9 @@ class Pet < ApplicationRecord
   has_one_attached :image
   has_many :adoptions, dependent: :destroy
 
-  enum :pet_type, {
-    dog: 0,
-    cat: 1,
-    guinea_pig: 2,
-    other: 3
-  }
+  enum :pet_type, {dog: 0, cat: 1, guinea_pig: 2, other: 3}
 
-  enum :status, {
-    available: 0,
-    pending_adoption: 1,
-    adopted: 2
-  }
+  enum :status, {available: 0, pending_adoption: 1, adopted: 2}, default: :available
 
   validates :name, :breed, :age, :pet_type, presence: true
   validates :age, numericality: { greater_than_or_equal_to: 0 }
@@ -22,6 +13,9 @@ class Pet < ApplicationRecord
   scope :by_type, ->(type) { where(pet_type: type) }
   validate :acceptable_image
 
+  def adopted?
+    adoptions.approved.exists?
+  end
   private
 
   def acceptable_image

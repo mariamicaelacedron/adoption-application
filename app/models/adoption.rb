@@ -6,6 +6,8 @@ class Adoption < ApplicationRecord
   validates :full_name, :phone, :email, :reason, presence: true
   validates :user_id, uniqueness: { scope: :pet_id, message: "ya tiene una solicitud para esta mascota" }
   after_update :notify_status_change, if: :saved_change_to_status?
+  after_update :update_pet_status, if: :saved_change_to_status?
+
   private
 
   def notify_status_change
@@ -14,6 +16,16 @@ class Adoption < ApplicationRecord
       UserMailer.adoption_approved(self).deliver_later
     when 'rejected'
       UserMailer.adoption_rejected(self).deliver_later
+    end
+  end
+
+  def update_pet_status
+    if approved?
+      # Cambia el estado de la mascota a 'adopted' (2)
+      pet.update!(status: :adopted)
+    elsif rejected? && pet.adoptions.approved.none?
+      # Si no hay otras solicitudes aprobadas, vuelve a 'available'
+      pet.update!(status: :available)
     end
   end
 end

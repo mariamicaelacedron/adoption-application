@@ -38,9 +38,12 @@
               <td><%= pet.breed %></td>
               <td><%= pet.age %></td>
               <td>
-                <span class="badge bg-<%= pet_status_badge(pet.status) %>">
-                  <%= pet.status.present? ? pet.status.titleize : 'Pendiente' %>
+                <span class="badge bg-<%= pet_status_badge(pet).first %>">
+                  <%= pet_status_badge(pet).last %>
                 </span>
+                <% if pet.adoptions.approved.any? %>
+                  <small class="d-block text-muted">Adoptada por: <%= pet.adoptions.approved.first.full_name %></small>
+                <% end %>
               </td>
               <td>
                 <%= link_to 'Ver', admin_pet_path(pet), class: 'btn btn-sm btn-info' %>

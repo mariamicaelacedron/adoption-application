@@ -18,11 +18,12 @@
       <div class="card mt-3">
         <div class="card-body">
           <p><strong>Edad:</strong> <%= @pet.age %> años</p>
-          <p><strong>Estado:</strong> 
-            <span class="badge bg-<%= pet_status_badge(@pet.status) %>">
-              <%= @pet.status.present? ? @pet.status.titleize : 'Pendiente' %>
-            </span>
-          </p>          
+<p><strong>Estado:</strong>
+  <% badge_class, status_text = pet_status_badge(@pet) %>
+  <span class="badge bg-<%= badge_class %>">
+    <%= status_text %>
+  </span>
+</p>          
           <% if @pet.description.present? %>
             <p><strong>Descripción:</strong></p>
             <p class="text-muted"><%= @pet.description %></p>

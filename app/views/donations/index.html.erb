@@ -29,8 +29,20 @@
         <% @donations.each do |don| %>
           <tr>
             <td><%= number_to_currency(don.amount) %></td>
-            <td><%= don.donation_type.try(:humanize).try(:capitalize) || 'Money' %></td>
-            <td><%= don.payment_method&.humanize || "No especificado" %></td>
+            <td>
+              <% if don.donation_type.present? %>
+                <%= t("enums.donation.donation_type.#{don.donation_type}", default: don.donation_type.try(:humanize).try(:capitalize) || 'Dinero') %>
+              <% else %>
+                Dinero
+              <% end %>
+            </td>
+            <td>
+              <% if don.payment_method.present? %>
+                <%= t("enums.donation.payment_method.#{don.payment_method}", default: don.payment_method&.humanize || "No especificado") %>
+              <% else %>
+                No especificado
+              <% end %>
+            </td>
             <td>
               <% if don.payment_proof.attached? %>
                 <%= link_to "Ver Comprobante",
@@ -43,12 +55,24 @@
             <td><%= don.description.presence || "–" %></td>
             <td>
               <span class="badge bg-<%= donation_status_badge(don.status) %>">
-              <%= don.status.try(:humanize).try(:capitalize) || 'Pendiente' %>
+                <% if don.status.present? %>
+                  <%= t("enums.donation.status.#{don.status}", default: don.status.try(:humanize).try(:capitalize) || 'Pendiente') %>
+                <% else %>
+                  Pendiente
+                <% end %>
+              </span>
             </td>
             <td><%= l(don.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
+    
+    <div class="mt-4">
+      <%= paginate @donations %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @donations.size %> de <%= @donations.total_count %> donaciones</small>
+      </div>
+    </div>
   <% end %>
 </div>

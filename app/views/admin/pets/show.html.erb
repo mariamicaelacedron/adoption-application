@@ -12,7 +12,13 @@
     </div>   
     <div class="col-md-6">
       <h1><%= @pet.name %></h1>
-      <p class="text-muted"><%= @pet.pet_type&.titleize || 'No especificado' %> - <%= @pet.breed %></p>
+      <p class="text-muted">
+        <% if @pet.pet_type.present? %>
+          <%= t("enums.pet.pet_type.#{@pet.pet_type}", default: display_pet_type(@pet)) %>
+        <% else %>
+          No especificado
+        <% end %> - <%= @pet.breed %>
+      </p>
       
       <div class="card mt-3">
         <div class="card-body">

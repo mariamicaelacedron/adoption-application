@@ -2,7 +2,7 @@ class DonationsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @donations = current_user.donations.order(created_at: :desc)
+    @donations = current_user.donations.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def new

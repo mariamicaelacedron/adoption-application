@@ -2,7 +2,7 @@ class PetsController < ApplicationController
   before_action :redirect_admin_to_admin_panel, only: [:index]
 
   def index
-    @pets = Pet.all.includes(:image_attachment).order(created_at: :desc)
+    @pets = Pet.all.includes(:image_attachment).order(created_at: :desc).page(params[:page]).per(9)
   end
 
   def show

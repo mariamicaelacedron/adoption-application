@@ -8,6 +8,7 @@ class Pet < ApplicationRecord
 
   validates :name, :breed, :age, :pet_type, presence: true
   validates :age, numericality: { greater_than_or_equal_to: 0 }
+  validates :image, presence: true, on: :create
 
   scope :available, -> { where(status: :available) }
   scope :by_type, ->(type) { where(pet_type: type) }

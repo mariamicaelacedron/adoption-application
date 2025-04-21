@@ -30,13 +30,23 @@
               <tr class="<%= 'table-secondary opacity-75' if donation.canceled? %>">
                 <td><%= donation.user.email %></td>
                 <td><%= number_to_currency(donation.amount) %></td>
-                <td><%= donation.donation_type&.humanize || 'Money' %></td>
+                <td>
+                  <% if donation.donation_type.present? %>
+                    <%= t("enums.donation.donation_type.#{donation.donation_type}", default: "Pendiente") %>
+                  <% else %>
+                    Pendiente
+                  <% end %>
+                </td>
                 <td>
                   <span class="badge bg-<%= donation_status_badge(donation.status) %>">
-                    <%= donation.status&.humanize || 'Pendiente' %>
+                    <% if donation.status.present? %>
+                      <%= t("enums.donation.status.#{donation.status}", default: "Pendiente") %>
+                    <% else %>
+                      Pendiente
+                    <% end %>
                   </span>
                 </td>
-                <td><%= l(donation.created_at, format: :short) %></td>
+                <td><%= donation.created_at.strftime("%d/%m/%Y %H:%M") %></td>
                 <td>
                   <%= link_to 'Ver', admin_donation_path(donation), class: 'btn btn-sm btn-outline-primary' %>
 
@@ -55,6 +65,13 @@
             <% end %>
           </tbody>
         </table>
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <%= paginate @donations %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @donations.size %> de <%= @donations.total_count %> donaciones</small>
       </div>
     </div>
   </div>

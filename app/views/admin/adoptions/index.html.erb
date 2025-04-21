@@ -35,9 +35,13 @@
                 </td>
                 <td><%= l(adoption.created_at, format: :short) %></td>
                 <td>
-                  <span class="badge bg-<%= adoption_status_badge(adoption.status) %>">
-                    <%= adoption.status.titleize %>
-                  </span>
+                  <% if adoption.status.present? %>
+                    <span class="badge bg-<%= adoption_status_badge(adoption.status) %>">
+                      <%= t("enums.adoption.status.#{adoption.status}", default: adoption.status.titleize || 'Pendiente') %>
+                    </span>
+                  <% else %>
+                    <span class="badge bg-secondary">Pendiente</span>
+                  <% end %>
                 </td>
                 <td>
                   <%= link_to 'Ver', admin_adoption_path(adoption), class: 'btn btn-sm btn-outline-primary' %>
@@ -54,6 +58,13 @@
             <% end %>
           </tbody>
         </table>
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <%= paginate @adoptions %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @adoptions.size %> de <%= @adoptions.total_count %> solicitudes</small>
       </div>
     </div>
   </div>

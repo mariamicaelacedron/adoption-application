@@ -6,7 +6,11 @@ module Admin
 
     def index
       @status = params[:status] || 'pending'
-      @adoptions = Adoption.includes(:pet, :user).where(status: @status).order(created_at: :desc)
+      @adoptions = Adoption.includes(:pet, :user)
+                          .where(status: @status)
+                          .order(created_at: :desc)
+                          .page(params[:page])
+                          .per(10)
     end
 
     def show

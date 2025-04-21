@@ -12,6 +12,7 @@ class Donation < ApplicationRecord
   validates :payment_method, presence: true
 
   validates :payment_proof, 
+            presence: true,
             content_type: ['image/png', 'image/jpeg', 'application/pdf'],
             size: { less_than: 5.megabytes }
 end

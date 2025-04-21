@@ -5,7 +5,7 @@ module Admin
     before_action :set_pet, only: [:show, :edit, :update, :destroy]  # Quité :index del set_pet
 
     def index
-      @pets = Pet.all.with_attached_image.order(created_at: :desc)
+      @pets = Pet.all.with_attached_image.order(created_at: :desc).page(params[:page]).per(10)
     end
 
     def show

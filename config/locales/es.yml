@@ -1,0 +1,29 @@
+es:
+  activerecord:
+    attributes:
+
+  enums:
+    donation:
+      status:
+        pending: "Pendiente"
+        completed: "Completada"
+        canceled: "Cancelada"
+      donation_type:
+        money: "Dinero"
+        food: "Comida"
+        medicine: "Medicina"
+        other: "Otro"
+      payment_method:
+        bank_transfer: "Transferencia bancaria"
+        mercado_pago: "Mercado Pago"
+        cash: "Efectivo"
+    adoption:
+      status:
+        pending: "Pendiente"
+        approved: "Aprobada"
+        rejected: "Rechazada"
+    pet:
+      pet_type:
+        dog: "Perro"
+        cat: "Gato"
+        other: "Otro"

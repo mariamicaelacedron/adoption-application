@@ -5,7 +5,11 @@
         <div class="card-header bg-white">
           <h2 class="h4 mb-0">Donación #<%= @donation.id %></h2>
           <span class="badge bg-<%= donation_status_badge(@donation.status) %>">
-            <%= @donation.status&.humanize || 'Pendiente' %>
+            <% if @donation.status.present? %>
+              <%= t("enums.donation.status.#{@donation.status}", default: @donation.status&.humanize || 'Pendiente') %>
+            <% else %>
+              Pendiente
+            <% end %>
           </span>
         </div>
         <div class="card-body">
@@ -14,8 +18,14 @@
               <h5 class="mb-3">Información de Donación</h5>
               <p><strong>Usuario:</strong> <%= @donation.user.email %></p>
               <p><strong>Monto:</strong> <%= number_to_currency(@donation.amount) %></p>
-              <p><strong>Tipo:</strong> <%= @donation.donation_type&.humanize || 'Money' %></p>
-              <p><strong>Método Pago:</strong> <%= @donation.payment_method.humanize %></p>
+              <p><strong>Tipo:</strong> 
+                <% if @donation.donation_type.present? %>
+                  <%= t("enums.donation.donation_type.#{@donation.donation_type}", default: @donation.donation_type&.humanize || 'Pendiente') %>
+                <% else %>
+                  Pendiente
+                <% end %>
+              </p>
+              <p><strong>Método Pago:</strong> <%= @donation.payment_method.present? ? @donation.payment_method.humanize : 'Pendiente' %></p>
               <p><strong>Fecha:</strong> <%= l(@donation.created_at, format: :long) %></p>
             </div>
             

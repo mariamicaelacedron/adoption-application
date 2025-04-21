@@ -5,7 +5,7 @@ module Admin
     before_action :set_donation, only: [:show, :destroy, :approve, :cancel]
 
     def index
-      @donations = Donation.includes(:user).order(created_at: :desc)
+      @donations = Donation.includes(:user).order(created_at: :desc).page(params[:page]).per(10)
       @pending_count = Donation.pending.count
     end
 

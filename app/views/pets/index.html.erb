@@ -14,5 +14,12 @@
         </div>
       <% end %>
     </div>
+    
+    <div class="mt-4">
+      <%= paginate @pets %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @pets.size %> de <%= @pets.total_count %> mascotas</small>
+      </div>
+    </div>
   <% end %>
 </div>

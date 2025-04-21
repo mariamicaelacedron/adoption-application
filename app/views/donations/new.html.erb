@@ -14,18 +14,16 @@
                 <%= f.number_field :amount, min: 1, class: "form-control", required: true %>
               </div>
             </div>
-            
             <div class="mb-3">
               <%= f.label :donation_type, "Tipo de donación", class: "form-label" %>
-              <%= f.select :donation_type, 
-                  options_for_select([
-                    ['Dinero', 'dinero'],
-                    ['Alimento', 'alimento'],
-                    ['Medicinas', 'medicinas'],
-                    ['Otros', 'otros']
-                  ]),
-                  {},
-                  class: "form-select" %>
+              <%= f.select :donation_type,
+                    options_for_select([
+                      ['Dinero',    'money'],
+                      ['Alimento',  'food'],
+                      ['Medicinas', 'medicine'],
+                      ['Otros',     'other']
+                    ], selected: @donation.donation_type),
+                    {}, class: "form-select" %>
             </div>
             
             <div class="mb-3">
@@ -36,9 +34,9 @@
               <%= f.label :payment_method, "Método de pago", class: "form-label" %>
               <%= f.select :payment_method, 
                   options_for_select([
-                    ['Transferencia Bancaria', 'transferencia'],
+                    ['Transferencia Bancaria', 'bank_transfer'],
                     ['Mercado Pago', 'mercado_pago'],
-                    ['Efectivo', 'efectivo']
+                    ['Efectivo', 'cash']
                   ]),
                   {},
                   class: "form-select",
@@ -69,7 +67,6 @@
   </div>
 </div>
 <script>
-  // Mostrar/ocultar instrucciones según método de pago
   document.getElementById('payment-method-select').addEventListener('change', function() {
     const instructions = document.getElementById('payment-instructions');
     instructions.style.display = this.value === 'transferencia' ? 'block' : 'none';

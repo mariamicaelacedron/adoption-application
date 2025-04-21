@@ -25,12 +25,17 @@
           <li class="nav-item">
             <%= link_to 'Inicio', root_path, class: 'nav-link' %>
           </li>
-          <li class="nav-item">
-            <%= link_to 'Donar', donations_path, class: 'nav-link' %>
-          </li>
+          <% unless current_user&.admin? %>
+            <li class="nav-item">
+              <%= link_to 'Donar', donations_path, class: 'nav-link' %>
+            </li>
+          <% end %>
           <% if current_user&.admin? %>
             <li class="nav-item">
               <%= link_to 'Solicitudes', admin_adoptions_path, class: 'nav-link' %>
+            </li>
+            <li class="nav-item">
+              <%= link_to 'Donaciones', admin_donations_path, class: 'nav-link' %>
             </li>
           <% end %>
         </ul>
@@ -50,6 +55,7 @@
                 <li><%= link_to 'Mis donaciones', donations_path, class: 'dropdown-item' %></li>
                 <% if current_user.admin? %>
                   <li><%= link_to 'Panel Admin', admin_pets_path, class: 'dropdown-item' %></li>
+                  <li><%= link_to 'Donaciones', admin_donations_path, class: 'dropdown-item' %></li>
                 <% end %>
                 <li><hr class="dropdown-divider"></li>
                 <li><%= button_to 'Cerrar sesión', destroy_user_session_path, method: :delete, form: { class: 'd-inline' }, class: 'dropdown-item text-danger bg-transparent border-0' %></li>

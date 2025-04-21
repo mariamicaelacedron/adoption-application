@@ -21,10 +21,8 @@ class Adoption < ApplicationRecord
 
   def update_pet_status
     if approved?
-      # Cambia el estado de la mascota a 'adopted' (2)
       pet.update!(status: :adopted)
     elsif rejected? && pet.adoptions.approved.none?
-      # Si no hay otras solicitudes aprobadas, vuelve a 'available'
       pet.update!(status: :available)
     end
   end

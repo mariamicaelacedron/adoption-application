@@ -1,6 +1,5 @@
 module PetsHelper
   def pet_status_badge(pet_or_status)
-    # Si recibe un objeto Pet completo
     if pet_or_status.respond_to?(:adopted?)
       pet = pet_or_status
       if pet.adopted?
@@ -10,7 +9,6 @@ module PetsHelper
       else
         ['success', 'Disponible']
       end
-    # Si recibe solo el status (para compatibilidad con código existente)
     else
       status = pet_or_status.to_s
       case status

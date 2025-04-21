@@ -10,12 +10,10 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  # Rutas públicas para mascotas
   resources :pets, only: [:index, :show] do
     resources :adoptions, only: [:new, :create, :index]
   end
 
-  # Rutas para adopciones
   resources :adoptions, only: [:show, :destroy] do
     member do
       patch :approve
@@ -27,7 +25,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Rutas para donaciones
   resources :donations, only: [:new, :create, :index] do
     collection do
       get :success
@@ -35,7 +32,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Área de usuario
   get 'my_applications', to: 'adoption_applications#user_applications'
   get 'my_profile', to: 'users#show'
 
@@ -53,10 +49,15 @@ Rails.application.routes.draw do
         post :reject
       end
     end
+    resources :donations, only: [:index, :show, :destroy] do
+      member do
+        patch :approve 
+        patch :cancel 
+      end
+    end
   end
 
 
-  # Helper para imágenes
   direct :pet_image do |pet, options|
     if pet.image.attached?
       route_for(:rails_blob, pet.image, options)

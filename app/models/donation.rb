@@ -3,11 +3,10 @@ class Donation < ApplicationRecord
   has_one_attached :payment_proof 
   validates :amount, presence: true, numericality: { greater_than: 0 }
 
-  enum :donation_type, {dinero: 'dinero', alimento: 'alimento', medicinas: 'medicinas', otros: 'otros'}, default: 'dinero'
-
-  enum :status, { pendiente: 'pendiente', completado: 'completado', cancelado: 'cancelado' }, default: 'pendiente'
-
-
+  enum :donation_type, { money: 'money', food: 'food', medicine: 'medicine', other: 'other' }, default: 'money'
+  enum :status, { pending: 'pending', completed: 'completed', canceled: 'canceled' }, default: 'pending'
+  enum :payment_method, { bank_transfer: 'bank_transfer', mercado_pago: 'mercado_pago', cash: 'cash' }, default: 'bank_transfer'
+  
   validates :donation_type, presence: true
   validates :status, presence: true
   validates :payment_method, presence: true
@@ -15,5 +14,4 @@ class Donation < ApplicationRecord
   validates :payment_proof, 
             content_type: ['image/png', 'image/jpeg', 'application/pdf'],
             size: { less_than: 5.megabytes }
-
 end

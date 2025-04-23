@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Administración de Mascotas</h1>
+    <%= link_to 'Agregar Nueva Mascota', new_admin_pet_path, class: 'btn btn-primary' %>
+  </div>
+
+  <% if @pets.empty? %>
+    <div class="alert alert-info text-center">
+      <h4>No hay mascotas registradas</h4>
+      <%= link_to 'Agregar tu primera mascota', new_admin_pet_path, class: 'btn btn-lg btn-primary mt-3' %>
+    </div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Raza</th>
+            <th>Edad</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pets.each do |pet| %>
+            <tr>
+              <td>
+                <% if pet.image.attached? %>
+                  <%= image_tag pet.image.variant(resize_to_limit: [50, 50]), class: "rounded" %>
+                <% else %>
+                  <span class="text-muted">Sin imagen</span>
+                <% end %>
+              </td>
+              <td><%= pet.name %></td>
+              <td>
+                <% if pet.pet_type.present? %>
+                  <%= t("enums.pet.pet_type.#{pet.pet_type}", default: display_pet_type(pet)) %>
+                <% else %>
+                  No especificado
+                <% end %>
+              </td>
+              <td><%= pet.breed %></td>
+              <td><%= pet.age %></td>
+              <td>
+                <span class="badge bg-<%= pet_status_badge(pet).first %>">
+                  <%= pet_status_badge(pet).last %>
+                </span>
+                <% if pet.adoptions.approved.any? %>
+                  <small class="d-block text-muted">Adoptada por: <%= pet.adoptions.approved.first.full_name %></small>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to 'Ver', admin_pet_path(pet), class: 'btn btn-sm btn-info' %>
+                <%= link_to 'Editar', edit_admin_pet_path(pet), class: 'btn btn-sm btn-warning' %>
+                <%= button_to 'Eliminar', admin_pet_path(pet), method: :delete, 
+                            data: { confirm: '¿Estás seguro?' }, 
+                            class: 'btn btn-sm btn-danger' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="mt-4">
+      <%= paginate @pets %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @pets.size %> de <%= @pets.total_count %> mascotas</small>
+      </div>
+    </div>
+  <% end %>
+</div>

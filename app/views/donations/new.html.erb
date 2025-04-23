@@ -1,0 +1,110 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="text-center">Donar a Salvando Patitas</h2>
+        </div>
+        <div class="card-body">
+          <%= form_with model: @donation, local: true, data: { turbo: true } do |f| %>
+            <% if @donation.errors.any? %>
+              <div class="alert alert-danger">
+                <h4><%= pluralize(@donation.errors.count, "error") %> impidieron guardar esta donación:</h4>
+                <ul>
+                  <% @donation.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            
+            <div class="mb-3">
+              <%= f.label :amount, "Monto a donar", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <%= f.number_field :amount, min: 1, class: "form-control", required: true %>
+              </div>
+            </div>
+            <div class="mb-3">
+              <%= f.label :donation_type, "Tipo de donación", class: "form-label" %>
+              <%= f.select :donation_type,
+                    options_for_select([
+                      ['Dinero',    'money'],
+                      ['Alimento',  'food'],
+                      ['Medicinas', 'medicine'],
+                      ['Otros',     'other']
+                    ], selected: @donation.donation_type),
+                    {}, class: "form-select", required: true %>
+            </div>
+            
+            <div class="mb-3">
+              <%= f.label :description, "Mensaje (opcional)", class: "form-label" %>
+              <%= f.text_area :description, class: "form-control", rows: 3 %>
+            </div>
+            <div class="mb-3">
+              <%= f.label :payment_method, "Método de pago", class: "form-label" %>
+              <%= f.select :payment_method, 
+                  options_for_select([
+                    ['Transferencia Bancaria', 'bank_transfer'],
+                    ['Mercado Pago', 'mercado_pago'],
+                    ['Efectivo', 'cash']
+                  ]),
+                  {},
+                  class: "form-select",
+                  id: "payment-method-select",
+                  required: true %>
+            </div>
+
+            <div id="payment-instructions" class="mb-3 p-3 bg-light rounded">
+              <h5>Datos para transferencia:</h5>
+              <p><strong>Alias:</strong> salvando.patitas</p>
+              <p><strong>CBU:</strong> 1234567890123456789012</p>
+              <p><strong>Banco:</strong> Banco Solidario</p>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :payment_proof, "Comprobante de pago", class: "form-label" %>
+              <%= f.file_field :payment_proof, 
+                              class: "form-control", 
+                              accept: "image/png,image/jpeg,application/pdf", 
+                              required: true,
+                              data: { 
+                                turbo_frame: "_top",
+                                controller: "file-validation" 
+                              } %>
+              <small class="text-muted">Formatos aceptados: PNG, JPG, PDF (máx. 5MB). <span class="text-danger">Obligatorio</span></small>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <%= f.submit "Realizar Donación", class: "btn btn-success btn-lg" %>
+              <%= link_to "Cancelar", donations_path, class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('payment-method-select').addEventListener('change', function() {
+    const instructions = document.getElementById('payment-instructions');
+    instructions.style.display = this.value === 'bank_transfer' ? 'block' : 'none';
+  });
+
+  document.addEventListener('turbo:submit-start', function(event) {
+    const form = event.target;
+    const fileInput = form.querySelector('input[type="file"]');
+    
+    if (fileInput && fileInput.files.length === 0) {
+      event.preventDefault();
+      alert('Debe adjuntar un comprobante de pago para continuar.');
+      
+      // Destacar el campo con error
+      fileInput.classList.add('is-invalid');
+      const errorMessage = document.createElement('div');
+      errorMessage.classList.add('invalid-feedback');
+      errorMessage.textContent = 'El comprobante de pago es obligatorio';
+      fileInput.parentNode.appendChild(errorMessage);
+    }
+  });
+</script>

@@ -1,0 +1,71 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Solicitudes de Adopción</h1>
+    
+    <div class="btn-group" role="group">
+      <%= link_to 'Pendientes', admin_adoptions_path(status: 'pending'), 
+          class: "btn #{params[:status] != 'approved' && params[:status] != 'rejected' ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to 'Aprobadas', admin_adoptions_path(status: 'approved'), 
+          class: "btn #{params[:status] == 'approved' ? 'btn-success' : 'btn-outline-success'}" %>
+      <%= link_to 'Rechazadas', admin_adoptions_path(status: 'rejected'), 
+          class: "btn #{params[:status] == 'rejected' ? 'btn-danger' : 'btn-outline-danger'}" %>
+    </div>
+  </div>
+
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Mascota</th>
+              <th>Solicitante</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @adoptions.each do |adoption| %>
+              <tr>
+                <td><%= link_to adoption.pet.name, pet_path(adoption.pet) %></td>
+                <td>
+                  <%= adoption.full_name %><br>
+                  <small class="text-muted"><%= adoption.email %></small>
+                </td>
+                <td><%= l(adoption.created_at, format: :short) %></td>
+                <td>
+                  <% if adoption.status.present? %>
+                    <span class="badge bg-<%= adoption_status_badge(adoption.status) %>">
+                      <%= t("enums.adoption.status.#{adoption.status}", default: adoption.status.titleize || 'Pendiente') %>
+                    </span>
+                  <% else %>
+                    <span class="badge bg-secondary">Pendiente</span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to 'Ver', admin_adoption_path(adoption), class: 'btn btn-sm btn-outline-primary' %>
+                  <% unless adoption.approved? %>
+                    <%= button_to 'Aprobar', approve_admin_adoption_path(adoption), 
+                        method: :post, class: 'btn btn-sm btn-success' %>
+                  <% end %>
+                  <% unless adoption.rejected? %>
+                    <%= button_to 'Rechazar', reject_admin_adoption_path(adoption), 
+                        method: :post, class: 'btn btn-sm btn-danger' %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <%= paginate @adoptions %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @adoptions.size %> de <%= @adoptions.total_count %> solicitudes</small>
+      </div>
+    </div>
+  </div>
+</div>

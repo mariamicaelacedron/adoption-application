@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   root 'pets#index'
   
-  # Configuración mejorada de Devise
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
@@ -11,58 +10,59 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  # Rutas personalizadas para autenticación
-  get 'login', to: redirect('/login') # Redundante pero útil para legacy
-  get 'register', to: redirect('/register') # Redundante pero útil para legacy
-  delete 'logout', to: 'users/sessions#destroy', as: :logout
-
-  # Rutas principales para mascotas
   resources :pets, only: [:index, :show] do
-    resources :adoption_applications, only: [:new, :create, :index]
-    # Agregamos :index para ver solicitudes de una mascota específica
+    resources :adoptions, only: [:new, :create, :index]
   end
 
-  # Rutas para manejo de solicitudes de adopción
-  resources :adoption_applications, only: [:show, :destroy] do
+  resources :adoptions, only: [:show, :destroy] do
     member do
       patch :approve
       patch :reject
-      get :manage # Nueva ruta para panel de administración
+      get :manage
     end
     collection do
-      get :pending # Para ver todas las solicitudes pendientes
+      get :pending
     end
   end
 
-  # Rutas para donaciones
   resources :donations, only: [:new, :create, :index] do
     collection do
-      get :success # Página después de donación exitosa
-      get :cancel # Página si se cancela la donación
+      get :success
+      get :cancel
     end
   end
 
-  # Área de usuario
-  get 'my_applications', to: 'adoption_applications#user_applications', as: :my_applications
-  get 'my_profile', to: 'users#show', as: :my_profile
+  get 'my_applications', to: 'adoption_applications#user_applications'
+  get 'my_profile', to: 'users#show'
 
-  # Área de administración
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
-    resources :pets, except: [:index, :show] do
+    resources :pets do 
       collection do
-        get :import # Para importar mascotas desde CSV
+        get :import
       end
     end
-    resources :adoption_applications, only: [:index] # Panel de control de solicitudes
+    resources :adoption_applications, only: [:index]
+    resources :adoptions, only: [:index, :show] do
+      member do
+        post :approve
+        post :reject
+      end
+    end
+    resources :donations, only: [:index, :show, :destroy] do
+      member do
+        patch :approve 
+        patch :cancel 
+      end
+    end
   end
 
-  # Helper para imágenes
+
   direct :pet_image do |pet, options|
     if pet.image.attached?
       route_for(:rails_blob, pet.image, options)
     else
-      "/default_pet.png"
+      asset_path('default_pet.png')
     end
   end
 end

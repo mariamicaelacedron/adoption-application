@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_07_211228) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_21_163523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,26 +42,31 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_211228) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "adoption_applications", force: :cascade do |t|
+  create_table "adoptions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "pet_id", null: false
     t.integer "status", default: 0
     t.text "answers"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["pet_id"], name: "index_adoption_applications_on_pet_id"
-    t.index ["user_id", "pet_id"], name: "index_adoption_applications_on_user_id_and_pet_id", unique: true
-    t.index ["user_id"], name: "index_adoption_applications_on_user_id"
+    t.string "full_name"
+    t.string "phone"
+    t.string "email"
+    t.text "reason"
+    t.index ["pet_id"], name: "index_adoptions_on_pet_id"
+    t.index ["user_id", "pet_id"], name: "index_adoptions_on_user_id_and_pet_id", unique: true
+    t.index ["user_id"], name: "index_adoptions_on_user_id"
   end
 
   create_table "donations", force: :cascade do |t|
-    t.bigint "user_id"
-    t.integer "donation_type"
-    t.decimal "amount"
+    t.bigint "user_id", null: false
+    t.string "donation_type", default: "0", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
     t.text "description"
-    t.integer "status", default: 0
+    t.string "status", default: "pendiente", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "payment_method", null: false
     t.index ["user_id"], name: "index_donations_on_user_id"
   end
 
@@ -71,8 +76,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_211228) do
     t.integer "age"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "pet_type", default: 0
-    t.integer "status", default: 0
+    t.integer "pet_type", default: 3, null: false
+    t.string "status", default: "0"
     t.text "description"
     t.string "gender"
     t.string "size"
@@ -96,7 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_211228) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "adoption_applications", "pets"
-  add_foreign_key "adoption_applications", "users"
+  add_foreign_key "adoptions", "pets"
+  add_foreign_key "adoptions", "users"
   add_foreign_key "donations", "users"
 end

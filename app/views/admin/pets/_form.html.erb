@@ -1,0 +1,61 @@
+<%= form_with(model: [:admin, @pet], local: true, html: { multipart: true }) do |f| %>
+  <% if @pet.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(@pet.errors.count, "error") %> impidieron guardar la mascota:</h2>
+      <ul>
+        <% @pet.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "Nombre", class: "form-label" %>
+    <%= f.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :breed, "Raza", class: "form-label" %>
+    <%= f.text_field :breed, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :age, "Edad", class: "form-label" %>
+    <%= f.number_field :age, class: "form-control", min: 0, required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :pet_type, "Tipo de Mascota", class: "form-label" %>
+    <%= f.select :pet_type, 
+        Pet.pet_types.map { |key, _| [t("enums.pet.pet_type.#{key}", default: key.titleize), key] }, 
+        { include_blank: "Seleccione tipo de mascota" }, 
+        { class: "form-select", required: true } %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :description, "Descripción", class: "form-label" %>
+    <%= f.text_area :description, class: "form-control", rows: 3 %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :image, "Imagen de la mascota", class: "form-label" %>
+    
+    <% if @pet.persisted? && @pet.image.attached? %>
+      <div class="mb-2">
+        <p>Imagen actual:</p>
+        <%= image_tag @pet.image.variant(resize_to_limit: [200, 200]), class: "img-thumbnail" %>
+      </div>
+      <p class="text-muted">Selecciona una nueva imagen solo si deseas cambiarla</p>
+      <%= f.file_field :image, class: "form-control", accept: "image/png,image/jpeg" %>
+    <% else %>
+      <%= f.file_field :image, class: "form-control", accept: "image/png,image/jpeg", required: true %>
+    <% end %>
+    <small class="text-muted">Formatos aceptados: PNG, JPG (máx. 5MB)</small>
+  </div>
+
+  <div class="actions d-flex gap-2">
+    <%= link_to 'Volver', @pet.new_record? ? admin_pets_path : admin_pet_path(@pet), class: 'btn btn-outline-secondary' %>
+    <%= f.submit @pet.new_record? ? "Crear Mascota" : "Actualizar Mascota", class: "btn btn-primary" %>
+  </div>
+<% end %>

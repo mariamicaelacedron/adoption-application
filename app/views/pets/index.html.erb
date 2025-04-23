@@ -1,54 +1,25 @@
-<h1 class="text-center my-4">Mascotas disponibles para adopción</h1>
+<div class="container mt-4">
+  <h1 class="mb-4">Mascotas Disponibles para Adopción</h1>
 
-<div class="container">
-  <section class="mb-5">
-    <h2 class="mb-4 border-bottom pb-2">Perros</h2>
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-      <% @dogs.each do |dog| %>
+  <% if @pets.empty? %>
+    <div class="alert alert-info text-center">
+      <h4>Actualmente no tenemos mascotas disponibles</h4>
+      <p>Vuelve a visitarnos pronto o contáctanos para más información.</p>
+    </div>
+  <% else %>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% @pets.each do |pet| %>
         <div class="col">
-          <%= render 'pet_card', pet: dog %>
-        </div>
-      <% end %>
-      <% if @dogs.empty? %>
-        <div class="col-12 text-center py-4">
-          <p>No hay perros disponibles actualmente.</p>
-          <%= image_tag default_pet_image_url(:dog, size: '400x300'), class: "img-fluid rounded" %>
+          <%= render 'pet_card', pet: pet %>
         </div>
       <% end %>
     </div>
-  </section>
-
-  <section class="mb-5">
-    <h2 class="mb-4 border-bottom pb-2">Gatos</h2>
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-      <% @cats.each do |cat| %>
-        <div class="col">
-          <%= render 'pet_card', pet: cat %>
-        </div>
-      <% end %>
-      <% if @cats.empty? %>
-        <div class="col-12 text-center py-4">
-          <p>No hay gatos disponibles actualmente.</p>
-          <%= image_tag default_pet_image_url(:cat, size: '400x300'), class: "img-fluid rounded" %>
-        </div>
-      <% end %>
+    
+    <div class="mt-4">
+      <%= paginate @pets %>
+      <div class="text-center text-muted mt-2">
+        <small>Mostrando <%= @pets.size %> de <%= @pets.total_count %> mascotas</small>
+      </div>
     </div>
-  </section>
-
-  <section class="mb-5">
-    <h2 class="mb-4 border-bottom pb-2">Cobayos</h2>
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-      <% @guinea_pigs.each do |gp| %>
-        <div class="col">
-          <%= render 'pet_card', pet: gp %>
-        </div>
-      <% end %>
-      <% if @guinea_pigs.empty? %>
-        <div class="col-12 text-center py-4">
-          <p>No hay cobayos disponibles actualmente.</p>
-          <%= image_tag default_pet_image_url(:guinea_pig, size: '400x300'), class: "img-fluid rounded" %>
-        </div>
-      <% end %>
-    </div>
-  </section>
+  <% end %>
 </div>

@@ -1,0 +1,62 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white">
+          <h2 class="h4 mb-0">Solicitud de adopción para <%= @pet.name %></h2>
+        </div>
+        
+        <div class="card-body">
+          <%= form_with(model: [@pet, @adoption], local: true, class: 'needs-validation', novalidate: true) do |f| %>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <%= f.label :full_name, "Nombre completo", class: "form-label" %>
+                <%= f.text_field :full_name, class: "form-control", required: true %>
+                <div class="invalid-feedback">
+                  Por favor ingresa tu nombre completo
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <%= f.label :email, "Correo electrónico", class: "form-label" %>
+                <%= f.email_field :email, class: "form-control", required: true, value: current_user.email %>
+                <div class="invalid-feedback">
+                  Por favor ingresa un email válido
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <%= f.label :phone, "Teléfono celular", class: "form-label" %>
+                <div class="input-group">
+                  <span class="input-group-text">+</span>
+                  <%= f.telephone_field :phone, class: "form-control", required: true, 
+                                        pattern: "[0-9]{10,15}", 
+                                        placeholder: "549114567890" %>
+                </div>
+                <small class="text-muted">Ejemplo: 549114567890 (sin espacios ni guiones)</small>
+                <div class="invalid-feedback">
+                  Ingresa 10-15 dígitos sin espacios
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <%= f.label :reason, "¿Por qué quiere adoptar a #{@pet.name}?", class: "form-label" %>
+                <%= f.text_area :reason, class: "form-control", rows: 4, required: true %>
+                <div class="invalid-feedback">
+                  Por favor explica tus motivos para la adopción
+                </div>
+              </div>
+              
+              <div class="col-12 mt-4">
+                <div class="d-flex justify-content-between">
+                  <%= link_to "Cancelar", @pet, class: "btn btn-outline-secondary" %>
+                  <%= f.submit "Enviar solicitud", class: "btn btn-success px-4" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

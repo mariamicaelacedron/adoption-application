@@ -1,71 +1,19 @@
 class PetsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_pet, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_admin, only: [:new, :create, :edit, :update, :destroy]
+  before_action :redirect_admin_to_admin_panel, only: [:index]
 
   def index
-    @dogs = Pet.dog.available.with_attached_image
-    @cats = Pet.cat.available.with_attached_image
-    @guinea_pigs = Pet.guinea_pig.available.with_attached_image
-    @others = Pet.other.available.with_attached_image
+    @pets = Pet.all.includes(:image_attachment).order(created_at: :desc).page(params[:page]).per(9)
   end
 
   def show
-      respond_to do |format|
-        format.html
-        format.json { render json: @pet }
-      end
-  end
-
-  def new
-    @pet = Pet.new
-  end
-
-  def create
-    @pet = Pet.new(pet_params)
-    
-    if @pet.save
-      if params[:pet][:image].present?
-        @pet.image.attach(params[:pet][:image])
-      end
-      
-      redirect_to @pet, notice: 'Mascota añadida correctamente.'
-    else
-      render :new
-    end
-  end
-
-  def edit
-  end
-
-  def update
-    if params[:pet][:remove_image] == "1"
-      @pet.image.purge
-    end
-    
-    if @pet.update(pet_params)
-      if params[:pet][:image].present?
-        @pet.image.attach(params[:pet][:image])
-      end
-      
-      redirect_to @pet, notice: 'Mascota actualizada correctamente.'
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-    @pet.destroy
-    redirect_to pets_url, notice: 'Mascota eliminada correctamente.'
+    @pet = Pet.find(params[:id])
   end
 
   private
 
-  def set_pet
-    @pet = Pet.find(params[:id])
-  end
-
-  def pet_params
-    params.require(:pet).permit(:name, :breed, :age, :pet_type, :description, :gender, :size, :status)
+  def redirect_admin_to_admin_panel
+    if current_user&.admin?
+      redirect_to admin_pets_path
+    end
   end
 end

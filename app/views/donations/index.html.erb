@@ -2,15 +2,17 @@
   <div class="<%= @donations.empty? ? 'd-none' : 'd-flex justify-content-between align-items-center mb-4' %>">
     <h2 class="h2 fw-bold">Mis Donaciones</h2>
     <%= link_to "Donar",
-                new_donation_path,
-                class: "btn btn-outline-primary px-4 py-2" %>
+                "https://link.mercadopago.com.ar/donasalvandopatitas",
+                class: "btn btn-primary px-4 py-2",
+                target: "_blank" %>
   </div>
   <% if @donations.empty? %>
     <div class="d-flex flex-column justify-content-center align-items-center py-5">
       <p class="fs-5 text-muted mb-4">No has realizado ninguna donación aún.</p>
-      <%= link_to "Hacer mi primera donación",
-                  new_donation_path,
-                  class: "btn btn-success btn-lg px-5 py-3" %>
+      <%= link_to "Donar",
+                  "https://link.mercadopago.com.ar/donasalvandopatitas",
+                  class: "btn btn-primary btn-lg px-5 py-3",
+                  target: "_blank" %>
     </div>
   <% else %>
     <table class="table table-hover table-striped align-middle shadow-sm rounded">

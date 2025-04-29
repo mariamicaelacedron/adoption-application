@@ -20,6 +20,7 @@
               <th>Usuario</th>
               <th>Monto</th>
               <th>Tipo</th>
+              <th>Método</th>
               <th>Estado</th>
               <th>Fecha</th>
               <th>Acciones</th>
@@ -35,6 +36,18 @@
                     <%= t("enums.donation.donation_type.#{donation.donation_type}", default: "Pendiente") %>
                   <% else %>
                     Pendiente
+                  <% end %>
+                </td>
+                <td>
+                  <% case donation.payment_method %>
+                  <% when 'bank_transfer' %>
+                    <span class="badge bg-secondary">Transferencia</span>
+                  <% when 'mercado_pago' %>
+                    <span class="badge bg-primary">MercadoPago</span>
+                  <% when 'cash' %>
+                    <span class="badge bg-warning text-dark">Efectivo</span>
+                  <% else %>
+                    <span class="badge bg-secondary">Otro</span>
                   <% end %>
                 </td>
                 <td>

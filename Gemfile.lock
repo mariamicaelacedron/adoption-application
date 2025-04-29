@@ -209,6 +209,9 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
+    mercadopago (2.3.0)
+      faraday (>= 0.9.0)
+      json (>= 1.4.6)
     mini_magick (5.2.0)
       benchmark
       logger
@@ -471,6 +474,7 @@ DEPENDENCIES
   kamal (>= 2.0.0.rc2)
   kaminari
   letter_opener
+  mercadopago
   omniauth
   omniauth-github
   pg (~> 1.1)

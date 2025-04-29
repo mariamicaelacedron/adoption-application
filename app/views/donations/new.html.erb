@@ -55,24 +55,37 @@
                   required: true %>
             </div>
 
-            <div id="payment-instructions" class="mb-3 p-3 bg-light rounded">
-              <h5>Datos para transferencia:</h5>
-              <p><strong>Alias:</strong> salvando.patitas</p>
-              <p><strong>CBU:</strong> 1234567890123456789012</p>
-              <p><strong>Banco:</strong> Banco Solidario</p>
+            <div id="bank-payment-instructions" class="payment-instructions mb-3 p-3 bg-light rounded">
+              <h5>Datos para transferencia bancaria:</h5>
+              <p><strong>CBU:</strong> 4530000800012665727738</p>
             </div>
 
-            <div class="mb-3">
+            <div id="mercado-pago-instructions" class="payment-instructions mb-3 p-3 bg-light rounded d-none">
+              <h5>Datos para Mercado Pago:</h5>
+              <p>Al usar Mercado Pago serás redirigido a la plataforma para completar tu donación de forma segura.</p>
+              <div class="d-grid gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-external-link-alt me-2"></i>Donar con Mercado Pago
+                </button>
+              </div>
+              <small class="text-muted mt-2 d-block">No es necesario subir comprobante, la donación se registrará automáticamente</small>
+            </div>
+
+            <div id="cash-payment-instructions" class="payment-instructions mb-3 p-3 bg-light rounded d-none">
+              <h5>Donación en efectivo:</h5>
+              <p>Puedes acercarte a nuestra sede en Av. Ejemplo 123, de Lunes a Viernes de 9 a 18hs.</p>
+            </div>
+
+            <div id="payment-proof-container" class="mb-3">
               <%= f.label :payment_proof, "Comprobante de pago", class: "form-label" %>
               <%= f.file_field :payment_proof, 
                               class: "form-control", 
                               accept: "image/png,image/jpeg,application/pdf", 
-                              required: true,
                               data: { 
                                 turbo_frame: "_top",
                                 controller: "file-validation" 
                               } %>
-              <small class="text-muted">Formatos aceptados: PNG, JPG, PDF (máx. 5MB). <span class="text-danger">Obligatorio</span></small>
+              <small class="text-muted">Formatos aceptados: PNG, JPG, PDF (máx. 5MB). <span class="text-danger" id="proof-required-tag">Obligatorio</span></small>
             </div>
             
             <div class="d-grid gap-2">
@@ -86,16 +99,53 @@
   </div>
 </div>
 <script>
-  document.getElementById('payment-method-select').addEventListener('change', function() {
-    const instructions = document.getElementById('payment-instructions');
-    instructions.style.display = this.value === 'bank_transfer' ? 'block' : 'none';
+  document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethodSelect = document.getElementById('payment-method-select');
+    const bankInstructions = document.getElementById('bank-payment-instructions');
+    const mercadoPagoInstructions = document.getElementById('mercado-pago-instructions');
+    const cashInstructions = document.getElementById('cash-payment-instructions');
+    const paymentProofContainer = document.getElementById('payment-proof-container');
+    const paymentProofInput = paymentProofContainer.querySelector('input[type="file"]');
+    const proofRequiredTag = document.getElementById('proof-required-tag');
+    
+    function updatePaymentMethod() {
+      // Ocultar todas las instrucciones primero
+      document.querySelectorAll('.payment-instructions').forEach(el => {
+        el.classList.add('d-none');
+      });
+      
+      // Mostrar las instrucciones según el método seleccionado
+      if (paymentMethodSelect.value === 'bank_transfer') {
+        bankInstructions.classList.remove('d-none');
+        paymentProofInput.setAttribute('required', true);
+        proofRequiredTag.textContent = 'Obligatorio';
+        paymentProofContainer.classList.remove('d-none');
+      } else if (paymentMethodSelect.value === 'mercado_pago') {
+        mercadoPagoInstructions.classList.remove('d-none');
+        paymentProofInput.removeAttribute('required');
+        proofRequiredTag.textContent = 'Opcional';
+        paymentProofContainer.classList.remove('d-none');
+      } else if (paymentMethodSelect.value === 'cash') {
+        cashInstructions.classList.remove('d-none');
+        paymentProofInput.setAttribute('required', true);
+        proofRequiredTag.textContent = 'Obligatorio';
+        paymentProofContainer.classList.remove('d-none');
+      }
+    }
+    
+    // Aplicar inicialmente
+    updatePaymentMethod();
+    
+    // Escuchar cambios
+    paymentMethodSelect.addEventListener('change', updatePaymentMethod);
   });
 
   document.addEventListener('turbo:submit-start', function(event) {
     const form = event.target;
     const fileInput = form.querySelector('input[type="file"]');
+    const paymentMethod = document.getElementById('payment-method-select').value;
     
-    if (fileInput && fileInput.files.length === 0) {
+    if (fileInput && fileInput.files.length === 0 && paymentMethod !== 'mercado_pago') {
       event.preventDefault();
       alert('Debe adjuntar un comprobante de pago para continuar.');
       

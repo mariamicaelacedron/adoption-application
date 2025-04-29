@@ -12,7 +12,8 @@ class Donation < ApplicationRecord
   validates :payment_method, presence: true
 
   validates :payment_proof, 
-            presence: true,
+            presence: { unless: -> { payment_method == 'mercado_pago' } },
             content_type: ['image/png', 'image/jpeg', 'application/pdf'],
-            size: { less_than: 5.megabytes }
+            size: { less_than: 5.megabytes },
+            if: -> { payment_proof.attached? }
 end

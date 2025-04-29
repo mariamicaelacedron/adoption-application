@@ -1,0 +1,15 @@
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
+.byebug_history
+
+## MAC OS
+.DS_Store
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## rvm/rbenv
+.ruby-version

@@ -76,3 +76,6 @@ group :test do
 end
 
 gem "bootsnap", "~> 1.18"
+
+# Mercado Pago
+gem 'mercadopago'

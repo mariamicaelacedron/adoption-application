@@ -3,17 +3,17 @@ current directory: /home/mica/AdoptionApplication/vendor/bundle/ruby/3.2.0/gems/
 creating Makefile
 
 current directory: /home/mica/AdoptionApplication/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
-make DESTDIR\= sitearchdir\=./.gem.20250410-37593-zytm9u sitelibdir\=./.gem.20250410-37593-zytm9u clean
+make DESTDIR\= sitearchdir\=./.gem.20250428-689501-eamviw sitelibdir\=./.gem.20250428-689501-eamviw clean
 
 current directory: /home/mica/AdoptionApplication/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
-make DESTDIR\= sitearchdir\=./.gem.20250410-37593-zytm9u sitelibdir\=./.gem.20250410-37593-zytm9u
+make DESTDIR\= sitearchdir\=./.gem.20250428-689501-eamviw sitelibdir\=./.gem.20250428-689501-eamviw
 compiling debug.c
 compiling iseq_collector.c
 linking shared-object debug/debug.so
 
 current directory: /home/mica/AdoptionApplication/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
-make DESTDIR\= sitearchdir\=./.gem.20250410-37593-zytm9u sitelibdir\=./.gem.20250410-37593-zytm9u install
-/usr/bin/install -m 0755 debug.so ./.gem.20250410-37593-zytm9u/debug
+make DESTDIR\= sitearchdir\=./.gem.20250428-689501-eamviw sitelibdir\=./.gem.20250428-689501-eamviw install
+/usr/bin/install -m 0755 debug.so ./.gem.20250428-689501-eamviw/debug
 
 current directory: /home/mica/AdoptionApplication/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
-make DESTDIR\= sitearchdir\=./.gem.20250410-37593-zytm9u sitelibdir\=./.gem.20250410-37593-zytm9u clean
+make DESTDIR\= sitearchdir\=./.gem.20250428-689501-eamviw sitelibdir\=./.gem.20250428-689501-eamviw clean

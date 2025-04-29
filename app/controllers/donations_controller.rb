@@ -3,6 +3,44 @@ class DonationsController < ApplicationController
 
   def index
     @donations = current_user.donations.order(created_at: :desc).page(params[:page]).per(10)
+    
+    # Crear preferencia de Mercado Pago
+    require 'mercadopago'
+    sdk = Mercadopago::SDK.new(ENV['MERCADOPAGO_ACCESS_TOKEN'])
+    
+    preference_data = {
+      items: [{
+        title: 'Donación a Salvando Patitas',
+        unit_price: 100.0,
+        quantity: 1
+      }],
+      back_urls: {
+        success: root_url + 'donations/success',
+        failure: root_url + 'donations/failure',
+        pending: root_url + 'donations/pending'
+      },
+      payment_methods: {
+        installments: 1
+      },
+      test_mode: true
+    }
+    
+    begin
+      preference_response = sdk.preference.create(preference_data)
+      Rails.logger.info "Mercado Pago Response: #{preference_response.inspect}"
+      
+      if preference_response[:response] && preference_response[:response]['id']
+        @preference_id = preference_response[:response]['id']
+      else
+        error_message = preference_response[:response] ? preference_response[:response].to_s : "No se recibió respuesta"
+        flash.now[:error] = "Error al crear la preferencia de pago: #{error_message}"
+        @preference_id = nil
+      end
+    rescue => e
+      Rails.logger.error "Mercado Pago Error: #{e.message}\n#{e.backtrace.join("\n")}"
+      flash.now[:error] = "Error al procesar el pago: #{e.message}"
+      @preference_id = nil
+    end
   end
 
   def new
@@ -12,60 +50,10 @@ class DonationsController < ApplicationController
   def create
     @donation = current_user.donations.new(donation_params)
     
-    if @donation.payment_method == 'mercado_pago'
-      begin
-        # Configurar Mercado Pago
-        require 'mercadopago'
-        sdk = MercadoPago::SDK.new(ENV['MERCADOPAGO_ACCESS_TOKEN'])
-        
-        # Crear preferencia de pago
-        preference_data = {
-          items: [{
-            title: "Donación",
-            unit_price: @donation.amount.to_f,
-            quantity: 1
-          }],
-          back_urls: {
-            success: donations_success_url,
-            failure: donations_failure_url,
-            pending: donations_pending_url
-          },
-          auto_return: "approved"
-        }
-        
-        preference_response = sdk.preference.create(preference_data)
-        preference = preference_response[:response]
-        
-        if preference["id"].present?
-          @donation.mercado_pago_preference_id = preference["id"]
-          @donation.status = 'pending'
-          
-          if @donation.save
-            redirect_to preference["init_point"], allow_other_host: true
-          else
-            render :new
-          end
-        else
-          flash.now[:error] = "Error al crear la preferencia de pago"
-          render :new
-        end
-      rescue => e
-        flash.now[:error] = "Error al procesar el pago: #{e.message}"
-        render :new
-      end
-    elsif @donation.payment_method == 'cbu'
-      @donation.status = 'pending'
-      if @donation.save
-        redirect_to donations_path, notice: '¡Gracias por tu donación! Por favor, realiza la transferencia al CBU proporcionado y sube el comprobante.'
-      else
-        render :new
-      end
+    if @donation.save
+      redirect_to donations_path, notice: '¡Gracias por tu donación! El administrador la revisará pronto.'
     else
-      if @donation.save
-        redirect_to donations_path, notice: '¡Gracias por tu donación! El administrador la revisará pronto.'
-      else
-        render :new
-      end
+      render :new
     end
   end
 

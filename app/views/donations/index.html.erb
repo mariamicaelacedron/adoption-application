@@ -1,18 +1,32 @@
 <div class="container mt-5">
+  <% if flash[:error].present? %>
+    <div class="alert alert-danger">
+      <%= flash[:error] %>
+    </div>
+  <% end %>
+
   <div class="<%= @donations.empty? ? 'd-none' : 'd-flex justify-content-between align-items-center mb-4' %>">
     <h2 class="h2 fw-bold">Mis Donaciones</h2>
-    <%= link_to "Donar",
-                "https://link.mercadopago.com.ar/donasalvandopatitas",
-                class: "btn btn-primary px-4 py-2",
-                target: "_blank" %>
+    <% if @preference_id.present? %>
+      <%= link_to "Donar con Mercado Pago",
+                  "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=#{@preference_id}",
+                  class: "btn btn-primary px-4 py-2",
+                  target: "_blank" %>
+    <% else %>
+      <button class="btn btn-secondary px-4 py-2" disabled>Donar con Mercado Pago</button>
+    <% end %>
   </div>
   <% if @donations.empty? %>
     <div class="d-flex flex-column justify-content-center align-items-center py-5">
       <p class="fs-5 text-muted mb-4">No has realizado ninguna donación aún.</p>
-      <%= link_to "Donar",
-                  "https://link.mercadopago.com.ar/donasalvandopatitas",
-                  class: "btn btn-primary btn-lg px-5 py-3",
-                  target: "_blank" %>
+      <% if @preference_id.present? %>
+        <%= link_to "Donar con Mercado Pago",
+                    "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=#{@preference_id}",
+                    class: "btn btn-primary btn-lg px-5 py-3",
+                    target: "_blank" %>
+      <% else %>
+        <button class="btn btn-secondary btn-lg px-5 py-3" disabled>Donar con Mercado Pago</button>
+      <% end %>
     </div>
   <% else %>
     <table class="table table-hover table-striped align-middle shadow-sm rounded">

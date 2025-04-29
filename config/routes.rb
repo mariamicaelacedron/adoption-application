@@ -66,6 +66,9 @@ Rails.application.routes.draw do
   end
   
   post 'mercado_pago/create_preference', to: 'mercado_pago#create_preference'
+  get 'mercado_pago/success', to: 'mercado_pago#success'
+  get 'mercado_pago/failure', to: 'mercado_pago#failure'
+  get 'mercado_pago/pending', to: 'mercado_pago#pending'
 
   direct :pet_image do |pet, options|
     if pet.image.attached?

@@ -1,94 +1,36 @@
-<div class="container mt-5">
-  <% if flash[:error].present? %>
-    <div class="alert alert-danger">
-      <%= flash[:error] %>
-    </div>
-  <% end %>
-
-  <div class="<%= @donations.empty? ? 'd-none' : 'd-flex justify-content-between align-items-center mb-4' %>">
-    <h2 class="h2 fw-bold">Mis Donaciones</h2>
-    <% if @preference_id.present? %>
-      <%= link_to "Donar con Mercado Pago",
-                  "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=#{@preference_id}",
-                  class: "btn btn-primary px-4 py-2",
-                  target: "_blank" %>
-    <% else %>
-      <button class="btn btn-secondary px-4 py-2" disabled>Donar con Mercado Pago</button>
-    <% end %>
-  </div>
-  <% if @donations.empty? %>
-    <div class="d-flex flex-column justify-content-center align-items-center py-5">
-      <p class="fs-5 text-muted mb-4">No has realizado ninguna donación aún.</p>
-      <% if @preference_id.present? %>
-        <%= link_to "Donar con Mercado Pago",
-                    "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=#{@preference_id}",
-                    class: "btn btn-primary btn-lg px-5 py-3",
-                    target: "_blank" %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">Mis Donaciones</h1>
+      
+      <%= link_to 'Nueva Donación', new_donation_path, class: 'btn btn-success mb-4' %>
+      
+      <% if @donations.any? %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>ID de Pago</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @donations.each do |donation| %>
+                <tr>
+                  <td><%= donation.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+                  <td>$<%= number_with_delimiter(donation.amount, delimiter: '.') %></td>
+                  <td><%= donation.payment_id %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
       <% else %>
-        <button class="btn btn-secondary btn-lg px-5 py-3" disabled>Donar con Mercado Pago</button>
+        <div class="alert alert-info">
+          Aún no has realizado donaciones.
+        </div>
       <% end %>
     </div>
-  <% else %>
-    <table class="table table-hover table-striped align-middle shadow-sm rounded">
-      <thead>
-        <tr>
-          <th>Monto</th>
-          <th>Tipo</th>
-          <th>Método de Pago</th>
-          <th>Comprobante</th>
-          <th>Mensaje</th>
-          <th>Estado</th>
-          <th>Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @donations.each do |don| %>
-          <tr>
-            <td><%= number_to_currency(don.amount) %></td>
-            <td>
-              <% if don.donation_type.present? %>
-                <%= t("enums.donation.donation_type.#{don.donation_type}", default: don.donation_type.try(:humanize).try(:capitalize) || 'Dinero') %>
-              <% else %>
-                Dinero
-              <% end %>
-            </td>
-            <td>
-              <% if don.payment_method.present? %>
-                <%= t("enums.donation.payment_method.#{don.payment_method}", default: don.payment_method&.humanize || "No especificado") %>
-              <% else %>
-                No especificado
-              <% end %>
-            </td>
-            <td>
-              <% if don.payment_proof.attached? %>
-                <%= link_to "Ver Comprobante",
-                            rails_blob_path(don.payment_proof, disposition: "attachment"),
-                            class: "btn btn-sm btn-outline-primary" %>
-              <% else %>
-                <span class="text-muted">Sin comprobante</span>
-              <% end %>
-            </td>
-            <td><%= don.description.presence || "–" %></td>
-            <td>
-              <span class="badge bg-<%= donation_status_badge(don.status) %>">
-                <% if don.status.present? %>
-                  <%= t("enums.donation.status.#{don.status}", default: don.status.try(:humanize).try(:capitalize) || 'Pendiente') %>
-                <% else %>
-                  Pendiente
-                <% end %>
-              </span>
-            </td>
-            <td><%= l(don.created_at, format: :short) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    
-    <div class="mt-4">
-      <%= paginate @donations %>
-      <div class="text-center text-muted mt-2">
-        <small>Mostrando <%= @donations.size %> de <%= @donations.total_count %> donaciones</small>
-      </div>
-    </div>
-  <% end %>
+  </div>
 </div>

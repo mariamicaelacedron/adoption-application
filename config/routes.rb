@@ -24,12 +24,13 @@ Rails.application.routes.draw do
       get :pending
     end
   end
-
-  resources :donations, only: [:new, :create, :index] do
-    collection do
-      get :success
-      get :cancel
-    end
+  resources :donations, only: [:index, :new, :create]
+  
+  namespace :mercado_pago do
+    post 'create_payment', to: 'mercado_pago#create_payment'
+    get 'success', to: 'mercado_pago#success', as: 'success'
+    get 'failure', to: 'mercado_pago#failure', as: 'failure'
+    get 'pending', to: 'mercado_pago#pending', as: 'pending'
   end
 
   get 'my_applications', to: 'adoption_applications#user_applications'
@@ -56,19 +57,6 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  resources :donations do
-    collection do
-      get :success
-      get :failure
-      get :pending
-    end
-  end
-  
-  post 'mercado_pago/create_preference', to: 'mercado_pago#create_preference'
-  get 'mercado_pago/success', to: 'mercado_pago#success'
-  get 'mercado_pago/failure', to: 'mercado_pago#failure'
-  get 'mercado_pago/pending', to: 'mercado_pago#pending'
 
   direct :pet_image do |pet, options|
     if pet.image.attached?

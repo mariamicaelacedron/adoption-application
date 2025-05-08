@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_28_200159) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_07_235853) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,16 +59,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_28_200159) do
   end
 
   create_table "donations", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "donation_type", default: "0", null: false
-    t.decimal "amount", precision: 10, scale: 2, null: false
-    t.text "description"
-    t.string "status", default: "pendiente", null: false
+    t.decimal "amount"
+    t.string "payment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "payment_method", null: false
-    t.string "mercado_pago_preference_id"
-    t.index ["user_id"], name: "index_donations_on_user_id"
   end
 
   create_table "pets", force: :cascade do |t|
@@ -104,5 +98,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_28_200159) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "adoptions", "pets"
   add_foreign_key "adoptions", "users"
-  add_foreign_key "donations", "users"
 end

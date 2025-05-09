@@ -1,36 +1,54 @@
-<div class="container">
+<div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
-      <h1 class="text-center mb-4">Mis Donaciones</h1>
-      
-      <%= link_to 'Nueva Donación', new_donation_path, class: 'btn btn-success mb-4' %>
-      
-      <% if @donations.any? %>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Monto</th>
-                <th>ID de Pago</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @donations.each do |donation| %>
-                <tr>
-                  <td><%= donation.created_at.strftime("%d/%m/%Y %H:%M") %></td>
-                  <td>$<%= number_with_delimiter(donation.amount, delimiter: '.') %></td>
-                  <td><%= donation.payment_id %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+    <div class="col-md-8 col-lg-6">
+      <!-- Card container -->
+      <div class="card border-0 shadow">
+        <div class="card-body p-4 p-md-5">
+          
+          <!-- Header -->
+          <div class="text-center mb-4">
+            <div class="mb-3">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </div>
+            <h1 class="h2 fw-bold text-primary">Realizar Donación</h1>
+            <p class="text-muted mt-2">Tu apoyo marca la diferencia</p>
+          </div>
+
+          <!-- Info message -->
+          <div class="alert alert-info border-start border-5 border-info">
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#0dcaf0" class="me-2 mt-1">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                </svg>
+              </div>
+              <div>
+                <strong>¡Gracias por tu generosidad!</strong>
+                <p class="mb-0">Cada contribución nos ayuda a continuar nuestro trabajo.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main button - FIXED SYNTAX HERE -->
+          <div class="d-grid mt-4">
+            <%= link_to new_donation_path, class: "btn btn-primary btn-lg py-3 fw-bold" do %>
+              <span class="me-2">💙</span> Donar Ahora
+            <% end %>
+          </div>
+
+          <!-- Additional info -->
+          <div class="mt-4 pt-3 border-top text-center text-muted small">
+            <p class="mb-2">Transacciones 100% seguras</p>
+            <div class="d-flex justify-content-center gap-4">
+              <span class="text-success">✓ Protegido</span>
+              <span class="text-success">✓ Encriptado</span>
+            </div>
+          </div>
+
         </div>
-      <% else %>
-        <div class="alert alert-info">
-          Aún no has realizado donaciones.
-        </div>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>

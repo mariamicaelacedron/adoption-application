@@ -7,7 +7,6 @@ module MercadoPago
             amount = params[:amount].to_f
             sdk = Mercadopago::SDK.new(ENV['MERCADOPAGO_ACCESS_TOKEN'])
           
-            # Usa URLs absolutas con protocolo HTTPS
             base_url = ENV['APP_HOST'] || "https://#{request.host}:#{request.port}"
             
             preference_data = {
@@ -22,7 +21,7 @@ module MercadoPago
                 failure: "#{base_url}/mercado_pago/failure",
                 pending: "#{base_url}/mercado_pago/pending"
               },
-              auto_return: "all", # Más confiable que "approved"
+              auto_return: "all",
               binary_mode: true
             }
           
@@ -60,11 +59,9 @@ module MercadoPago
       end
   
       def notification
-        # Procesar notificación de Mercado Pago
         payment_id = params[:data][:id] if params[:data].present?
         
         if payment_id
-          # Aquí puedes verificar el estado del pago con la API de Mercado Pago
           head :ok
         else
           head :unprocessable_entity

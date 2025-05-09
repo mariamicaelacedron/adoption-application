@@ -1,6 +1,5 @@
 <div class="container py-5">
   <div class="row g-4">
-    <!-- Columna de imagen -->
     <div class="col-lg-6">
       <% if @pet.image.attached? %>
         <div class="card border-0 shadow-lg overflow-hidden rounded-3">
@@ -19,10 +18,8 @@
       <% end %>
     </div>
     
-    <!-- Columna de información -->
     <div class="col-lg-6">
       <div class="d-flex flex-column h-100">
-        <!-- Encabezado -->
         <div class="mb-4">
           <h1 class="display-5 fw-bold text-primary mb-2"><%= @pet.name %></h1>
           <div class="d-flex align-items-center gap-2 mb-3">
@@ -35,7 +32,6 @@
           </div>
         </div>
         
-        <!-- Tarjeta de detalles -->
         <div class="card border-0 shadow-sm rounded-3 flex-grow-1">
           <div class="card-body">
             <ul class="list-unstyled">
@@ -68,7 +64,6 @@
           </div>
         </div>
         
-        <!-- Botones de acción -->
         <div class="d-flex gap-3 mt-4">
           <%= link_to admin_pets_path, class: "btn btn-outline-secondary btn-lg flex-grow-1" do %>
             <i class="bi bi-arrow-left me-2"></i> Volver

@@ -1,13 +1,19 @@
-<div class="container mt-4">
-  <h1 class="mb-4">Mascotas Disponibles para Adopción</h1>
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-primary mb-3">🐾 Mascotas Disponibles</h1>
+    <p class="lead text-muted">Encuentra a tu compañero perfecto para siempre</p>
+  </div>
 
   <% if @pets.empty? %>
-    <div class="alert alert-info text-center">
-      <h4>Actualmente no tenemos mascotas disponibles</h4>
-      <p>Vuelve a visitarnos pronto o contáctanos para más información.</p>
+    <div class="card border-0 shadow-sm rounded-3 text-center py-5">
+      <div class="card-body">
+        <i class="bi bi-emoji-frown display-4 text-muted mb-3"></i>
+        <h3 class="h4 text-muted mb-3">Actualmente no tenemos mascotas disponibles</h3>
+        <p class="text-muted">Estamos trabajando para rescatar más animalitos que necesitan un hogar.</p>
+      </div>
     </div>
   <% else %>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <% @pets.each do |pet| %>
         <div class="col">
           <%= render 'pet_card', pet: pet %>
@@ -15,10 +21,15 @@
       <% end %>
     </div>
     
-    <div class="mt-4">
-      <%= paginate @pets %>
-      <div class="text-center text-muted mt-2">
-        <small>Mostrando <%= @pets.size %> de <%= @pets.total_count %> mascotas</small>
+    <div class="d-flex flex-column align-items-center mt-5">
+      <div class="mb-3">
+        <%= paginate @pets, class: "pagination pagination-lg" %>
+      </div>
+      <div class="text-muted">
+        <small class="d-inline-block px-3 py-1 bg-light rounded-pill">
+          Mostrando <span class="fw-bold"><%= @pets.size %></span> de 
+          <span class="fw-bold"><%= @pets.total_count %></span> mascotas
+        </small>
       </div>
     </div>
   <% end %>

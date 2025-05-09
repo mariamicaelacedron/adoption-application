@@ -1,73 +1,105 @@
-<div class="container mt-4">
+<div class="container py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Administración de Mascotas</h1>
-    <%= link_to 'Agregar Nueva Mascota', new_admin_pet_path, class: 'btn btn-primary' %>
+    <h1 class="h2 fw-bold text-primary">
+      <i class="bi bi-paw me-2"></i> Administración de Mascotas
+    </h1>
+    <%= link_to new_admin_pet_path, class: 'btn btn-primary btn-lg' do %>
+      <i class="bi bi-plus-lg me-2"></i> Agregar Mascota
+    <% end %>
   </div>
 
   <% if @pets.empty? %>
-    <div class="alert alert-info text-center">
-      <h4>No hay mascotas registradas</h4>
-      <%= link_to 'Agregar tu primera mascota', new_admin_pet_path, class: 'btn btn-lg btn-primary mt-3' %>
+    <div class="card border-0 shadow-sm text-center py-5">
+      <div class="card-body">
+        <i class="bi bi-paw text-muted display-4 mb-3"></i>
+        <h3 class="h4 text-muted mb-3">No hay mascotas registradas</h3>
+        <%= link_to new_admin_pet_path, class: 'btn btn-primary btn-lg mt-3' do %>
+          <i class="bi bi-plus-lg me-2"></i> Agregar primera mascota
+        <% end %>
+      </div>
     </div>
   <% else %>
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead class="table-dark">
-          <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Raza</th>
-            <th>Edad</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @pets.each do |pet| %>
-            <tr>
-              <td>
-                <% if pet.image.attached? %>
-                  <%= image_tag pet.image.variant(resize_to_limit: [50, 50]), class: "rounded" %>
-                <% else %>
-                  <span class="text-muted">Sin imagen</span>
-                <% end %>
-              </td>
-              <td><%= pet.name %></td>
-              <td>
-                <% if pet.pet_type.present? %>
-                  <%= t("enums.pet.pet_type.#{pet.pet_type}", default: display_pet_type(pet)) %>
-                <% else %>
-                  No especificado
-                <% end %>
-              </td>
-              <td><%= pet.breed %></td>
-              <td><%= pet.age %></td>
-              <td>
-                <span class="badge bg-<%= pet_status_badge(pet).first %>">
-                  <%= pet_status_badge(pet).last %>
-                </span>
-                <% if pet.adoptions.approved.any? %>
-                  <small class="d-block text-muted">Adoptada por: <%= pet.adoptions.approved.first.full_name %></small>
-                <% end %>
-              </td>
-              <td>
-                <%= link_to 'Ver', admin_pet_path(pet), class: 'btn btn-sm btn-info' %>
-                <%= link_to 'Editar', edit_admin_pet_path(pet), class: 'btn btn-sm btn-warning' %>
-                <%= button_to 'Eliminar', admin_pet_path(pet), method: :delete, 
-                            data: { confirm: '¿Estás seguro?' }, 
-                            class: 'btn btn-sm btn-danger' %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4">Imagen</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Raza</th>
+                <th>Edad</th>
+                <th>Estado</th>
+                <th class="pe-4">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @pets.each do |pet| %>
+                <tr>
+                  <td class="ps-4">
+                    <% if pet.image.attached? %>
+                      <%= image_tag pet.image.variant(resize_to_limit: [60, 60]), class: "rounded-circle border", style: "width: 60px; height: 60px; object-fit: cover;" %>
+                    <% else %>
+                      <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="bi bi-image text-muted fs-4"></i>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td class="fw-semibold"><%= pet.name %></td>
+                  <td>
+                    <% if pet.pet_type.present? %>
+                      <span class="badge bg-info bg-opacity-10 text-info">
+                        <%= t("enums.pet.pet_type.#{pet.pet_type}", default: display_pet_type(pet)) %>
+                      </span>
+                    <% else %>
+                      <span class="text-muted">No especificado</span>
+                    <% end %>
+                  </td>
+                  <td><%= pet.breed.presence || '-' %></td>
+                  <td><%= pet.age %> años</td>
+                  <td>
+                    <span class="badge rounded-pill bg-<%= pet_status_badge(pet).first %> bg-opacity-10 text-<%= pet_status_badge(pet).first %>">
+                      <%= pet_status_badge(pet).last %>
+                    </span>
+                    <% if pet.adoptions.approved.any? %>
+                      <small class="d-block text-muted mt-1">
+                        <i class="bi bi-person-check me-1"></i> <%= pet.adoptions.approved.first.full_name %>
+                      </small>
+                    <% end %>
+                  </td>
+                  <td class="pe-4">
+                    <div class="d-flex gap-2">
+                      <%= link_to admin_pet_path(pet), class: 'btn btn-sm btn-outline-info', title: 'Ver' do %>
+                        <i class="bi bi-eye"></i>
+                      <% end %>
+                      <%= link_to edit_admin_pet_path(pet), class: 'btn btn-sm btn-outline-warning', title: 'Editar' do %>
+                        <i class="bi bi-pencil"></i>
+                      <% end %>
+                      <%= button_to admin_pet_path(pet), method: :delete, 
+                                  data: { confirm: '¿Estás seguro de eliminar esta mascota?' }, 
+                                  class: 'btn btn-sm btn-outline-danger', title: 'Eliminar' do %>
+                        <i class="bi bi-trash"></i>
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
     
-    <div class="mt-4">
-      <%= paginate @pets %>
-      <div class="text-center text-muted mt-2">
-        <small>Mostrando <%= @pets.size %> de <%= @pets.total_count %> mascotas</small>
+    <div class="d-flex flex-column align-items-center mt-4">
+      <div class="mb-3">
+        <%= paginate @pets, class: "pagination" %>
+      </div>
+      <div class="text-muted">
+        <small class="d-inline-block px-3 py-1 bg-light rounded-pill">
+          Mostrando <span class="fw-bold"><%= @pets.size %></span> de 
+          <span class="fw-bold"><%= @pets.total_count %></span> mascotas
+        </small>
       </div>
     </div>
   <% end %>

@@ -1,81 +1,160 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-8">
-      <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-          <h2 class="h5 mb-0">Solicitud de Adopción</h2>
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary bg-opacity-10 text-primary border-0 py-3">
+          <h2 class="h4 mb-0 fw-bold">
+            <i class="bi bi-file-earmark-text me-2"></i> Solicitud de Adopción
+          </h2>
         </div>
         
         <div class="card-body">
-          <div class="row mb-4">
+          <div class="row g-4 mb-4">
             <div class="col-md-6">
-              <h3 class="h5">Información de la Mascota</h3>
-              <p><strong>Nombre:</strong> <%= link_to @pet.name, pet_path(@pet) %></p>
-              <p><strong>Tipo:</strong> 
-                <% if @pet.pet_type.present? %>
-                  <%= t("enums.pet.pet_type.#{@pet.pet_type}", default: @pet.pet_type.titleize || 'No especificado') %>
-                <% else %>
-                  No especificado
-                <% end %>
-              </p>
-              <p><strong>Raza:</strong> <%= @pet.breed.presence || 'No especificada' %></p>
-              <p><strong>Edad:</strong> <%= @pet.age %> años</p>
+              <div class="card border-0 bg-light bg-opacity-10 h-100">
+                <div class="card-body">
+                  <h3 class="h5 fw-bold mb-3 text-primary">
+                    <i class="bi bi-paw me-2"></i> Información de la Mascota
+                  </h3>
+                  
+                  <ul class="list-unstyled">
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Nombre:</span>
+                      <%= link_to @pet.name, admin_pet_path(@pet), class: "fw-semibold text-decoration-none" %>
+                    </li>
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Tipo:</span>
+                      <span class="badge bg-info bg-opacity-10 text-info">
+                        <%= @pet.pet_type.present? ? t("enums.pet.pet_type.#{@pet.pet_type}") : 'No especificado' %>
+                      </span>
+                    </li>
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Raza:</span>
+                      <span class="fw-semibold"><%= @pet.breed.presence || 'No especificada' %></span>
+                    </li>
+                    <li class="mb-0 d-flex">
+                      <span class="text-muted me-2">Edad:</span>
+                      <span class="fw-semibold"><%= @pet.age %> años</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
             
             <div class="col-md-6">
-              <h3 class="h5">Información del Solicitante</h3>
-              <p><strong>Nombre:</strong> <%= @adoption.full_name %></p>
-              <p><strong>Email:</strong> <%= @adoption.email %></p>
-              <p><strong>Teléfono:</strong> <%= @adoption.phone %></p>
-              <p><strong>Fecha solicitud:</strong> <%= l(@adoption.created_at, format: :long) %></p>
-              <p>
-                <strong>Estado:</strong>
-                <% if @adoption.status.present? %>
-                  <span class="badge bg-<%= adoption_status_badge(@adoption.status) %>">
-                    <%= t("enums.adoption.status.#{@adoption.status}", default: @adoption.status.titleize || 'Pendiente') %>
-                  </span>
-                <% else %>
-                  <span class="badge bg-secondary">Pendiente</span>
-                <% end %>
-              </p>
-            </div>
-          </div>
-          
-          <div class="mb-4">
-            <h3 class="h5">Motivos de la Adopción</h3>
-            <div class="card bg-light">
-              <div class="card-body">
-                <%= simple_format(@adoption.reason) %>
+              <div class="card border-0 bg-light bg-opacity-10 h-100">
+                <div class="card-body">
+                  <h3 class="h5 fw-bold mb-3 text-primary">
+                    <i class="bi bi-person me-2"></i> Información del Solicitante
+                  </h3>
+                  
+                  <ul class="list-unstyled">
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Nombre:</span>
+                      <span class="fw-semibold"><%= @adoption.full_name %></span>
+                    </li>
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Email:</span>
+                      <span class="fw-semibold"><%= @adoption.email %></span>
+                    </li>
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Teléfono:</span>
+                      <span class="fw-semibold"><%= @adoption.phone %></span>
+                    </li>
+                    <li class="mb-2 d-flex">
+                      <span class="text-muted me-2">Fecha:</span>
+                      <span class="fw-semibold"><%= l(@adoption.created_at, format: :long) %></span>
+                    </li>
+                    <li class="mb-0 d-flex">
+                      <span class="text-muted me-2">Estado:</span>
+                      <span class="badge rounded-pill bg-<%= adoption_status_badge(@adoption.status) %> bg-opacity-10 text-<%= adoption_status_badge(@adoption.status) %>">
+                        <%= t("enums.adoption.status.#{@adoption.status}", default: @adoption.status.titleize || 'Pendiente') %>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
           
-          <div class="d-flex gap-2">
-            <%= link_to 'Volver', admin_adoptions_path, class: 'btn btn-outline-secondary' %>
+      
+          <div class="mb-4">
+            <h3 class="h5 fw-bold text-primary mb-3">
+              <i class="bi bi-chat-square-text me-2"></i> Motivos de la Adopción
+            </h3>
+            <div class="card border-0 bg-light bg-opacity-10">
+              <div class="card-body">
+                <%= simple_format(@adoption.reason, class: "mb-0") %>
+              </div>
+            </div>
+          </div>
+          
+
+          <div class="d-flex flex-wrap gap-3">
+            <%= link_to admin_adoptions_path, class: "btn btn-outline-secondary" do %>
+              <i class="bi bi-arrow-left me-2"></i> Volver
+            <% end %>
             
             <% unless @adoption.approved? %>
-              <%= button_to 'Aprobar Solicitud', approve_admin_adoption_path(@adoption),
-                  method: :post, class: 'btn btn-success', data: { confirm: '¿Estás seguro de aprobar esta solicitud?' } %>
+              <%= button_to approve_admin_adoption_path(@adoption), 
+                  method: :post, 
+                  class: "btn btn-success",
+                  data: { confirm: '¿Estás seguro de aprobar esta solicitud?' } do %>
+                <i class="bi bi-check-circle me-2"></i> Aprobar
+              <% end %>
             <% end %>
             
             <% unless @adoption.rejected? %>
-              <%= button_to 'Rechazar Solicitud', reject_admin_adoption_path(@adoption),
-                  method: :post, class: 'btn btn-danger', data: { confirm: '¿Estás seguro de rechazar esta solicitud?' } %>
+              <%= button_to reject_admin_adoption_path(@adoption), 
+                  method: :post, 
+                  class: "btn btn-danger",
+                  data: { confirm: '¿Estás seguro de rechazar esta solicitud?' } do %>
+                <i class="bi bi-x-circle me-2"></i> Rechazar
+              <% end %>
             <% end %>
           </div>
         </div>
       </div>
     </div>
     
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-header bg-info text-white">
-          <h2 class="h5 mb-0">Acciones Rápidas</h2>
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-info bg-opacity-10 text-info border-0 py-3">
+          <h2 class="h4 mb-0 fw-bold">
+            <i class="bi bi-lightning me-2"></i> Acciones Rápidas
+          </h2>
         </div>
-        <div class="card-body">
-          <%= link_to 'Ver todas las solicitudes', admin_adoptions_path, class: 'btn btn-outline-primary w-100 mb-2' %>
-          <%= link_to 'Ver mascota', pet_path(@pet), class: 'btn btn-outline-success w-100 mb-2' %>
-          <%= link_to 'Editar mascota', edit_admin_pet_path(@pet), class: 'btn btn-outline-warning w-100' if current_user.admin? %>
+        <div class="card-body d-grid gap-3">
+          <%= link_to admin_adoptions_path, class: "btn btn-outline-primary text-start" do %>
+            <i class="bi bi-list-ul me-2"></i> Ver todas las solicitudes
+          <% end %>
+          
+          <%= link_to admin_pet_path(@pet), class: "btn btn-outline-success text-start" do %>
+            <i class="bi bi-eye me-2"></i> Ver mascota
+          <% end %>
+          
+          <% if current_user.admin? %>
+            <%= link_to edit_admin_pet_path(@pet), class: "btn btn-outline-warning text-start" do %>
+              <i class="bi bi-pencil me-2"></i> Editar mascota
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Tarjeta de mascota (opcional) -->
+      <div class="card border-0 shadow-sm mt-4">
+        <div class="card-body text-center">
+          <% if @pet.image.attached? %>
+            <%= image_tag @pet.image.variant(resize_to_limit: [300, 300]), 
+                class: "img-fluid rounded mb-3", 
+                style: "max-height: 200px; width: auto;" %>
+          <% else %>
+            <div class="bg-light p-4 rounded mb-3">
+              <i class="bi bi-paw text-muted fs-1"></i>
+            </div>
+          <% end %>
+          <h4 class="h5 fw-bold"><%= @pet.name %></h4>
+          <p class="text-muted mb-0"><%= @pet.breed %></p>
         </div>
       </div>
     </div>

@@ -1,53 +1,99 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-md-6">
+<div class="container py-5">
+  <div class="row g-4">
+    <!-- Columna de imagen -->
+    <div class="col-lg-6">
       <% if @pet.image.attached? %>
-        <%= image_tag @pet.image.variant(resize_to_limit: [600, 600]), class: "img-fluid rounded shadow" %>
+        <div class="card border-0 shadow-lg overflow-hidden rounded-3">
+          <%= image_tag @pet.image.variant(resize_to_limit: [800, 800]), 
+              class: "img-fluid w-100", 
+              style: "height: 400px; object-fit: cover;",
+              alt: @pet.name %>
+        </div>
       <% else %>
-        <div class="bg-light p-5 text-center rounded shadow">
-          <i class="fas fa-paw fa-5x text-secondary mb-3"></i>
-          <p class="text-muted">No hay imagen disponible</p>
+        <div class="card border-0 shadow-sm rounded-3 h-100 d-flex align-items-center justify-content-center bg-light" style="min-height: 300px;">
+          <div class="text-center p-4">
+            <i class="bi bi-paw text-muted display-4 mb-3"></i>
+            <h4 class="text-muted">Imagen no disponible</h4>
+          </div>
         </div>
       <% end %>
     </div>
     
-    <div class="col-md-6">
-      <h1><%= @pet.name %></h1>
-      <p class="text-muted"><%= @pet.pet_type.titleize %> - <%= @pet.breed %></p>
-      
-      <div class="card mt-3">
-        <div class="card-body">
-          <p><strong>Edad:</strong> <%= @pet.age %> años</p>
-          <p><strong>Estado:</strong>
-            <% badge_class, status_text = pet_status_badge(@pet) %>
-            <span class="badge bg-<%= badge_class %>">
-              <%= status_text %>
+    <!-- Columna de información -->
+    <div class="col-lg-6">
+      <div class="d-flex flex-column h-100">
+        <!-- Encabezado -->
+        <div class="mb-4">
+          <h1 class="display-5 fw-bold text-primary mb-2"><%= @pet.name %></h1>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="badge bg-info bg-opacity-10 text-info fs-6">
+              <%= @pet.pet_type.titleize %>
             </span>
-          </p>          
-          <% if @pet.description.present? %>
-            <p><strong>Descripción:</strong></p>
-            <p class="text-muted"><%= @pet.description %></p>
+            <span class="text-muted fs-5"><%= @pet.breed %></span>
+          </div>
+        </div>
+        
+        <!-- Tarjeta de detalles -->
+        <div class="card border-0 shadow-sm rounded-3 flex-grow-1 mb-4">
+          <div class="card-body">
+            <ul class="list-unstyled">
+              <li class="mb-3 d-flex">
+                <span class="me-3 text-muted"><i class="bi bi-calendar-heart me-2"></i>Edad:</span>
+                <strong><%= @pet.age %> años</strong>
+              </li>
+              
+              <li class="mb-3 d-flex">
+                <span class="me-3 text-muted"><i class="bi bi-heart-pulse me-2"></i>Estado:</span>
+                <% badge_class, status_text = pet_status_badge(@pet) %>
+                <span class="badge rounded-pill bg-<%= badge_class %> bg-opacity-10 text-<%= badge_class %>">
+                  <%= status_text %>
+                </span>
+              </li>
+              
+              <% if @pet.description.present? %>
+                <li class="mb-0">
+                  <div class="text-muted mb-2"><i class="bi bi-card-text me-2"></i>Descripción:</div>
+                  <div class="p-3 bg-light rounded-2">
+                    <%= simple_format(@pet.description, class: "mb-0") %>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Botones de acción -->
+        <div class="d-flex flex-wrap gap-3 mt-auto">
+          <%= link_to pets_path, class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-arrow-left me-2"></i> Volver
+          <% end %>
+          
+          <% if current_user&.admin? %>
+            <%= link_to edit_admin_pet_path(@pet), class: "btn btn-primary" do %>
+              <i class="bi bi-pencil-square me-2"></i> Editar
+            <% end %>
+          <% end %>
+          
+          <% if current_user && !current_user.admin? %>
+            <% if @pet.adoptions.where(user_id: current_user.id, status: 'pending').exists? %>
+              <button class="btn btn-warning" disabled>
+                <i class="bi bi-hourglass me-2"></i> Solicitud pendiente
+              </button>
+            <% elsif @pet.adoptions.where(user_id: current_user.id, status: 'approved').exists? %>
+              <button class="btn btn-success" disabled>
+                <i class="bi bi-check-circle me-2"></i> Adopción aprobada
+              </button>
+            <% elsif @pet.adoptions.where(user_id: current_user.id, status: 'rejected').exists? %>
+              <button class="btn btn-danger" disabled>
+                <i class="bi bi-x-circle me-2"></i> Solicitud rechazada
+              </button>
+            <% else %>
+              <%= link_to new_pet_adoption_path(@pet), class: "btn btn-success" do %>
+                <i class="bi bi-heart me-2"></i> Solicitar Adopción
+              <% end %>
+            <% end %>
           <% end %>
         </div>
-      </div>
-      
-      <div class="mt-3 d-flex gap-2">
-        <%= link_to 'Volver', pets_path, class: 'btn btn-outline-secondary' %>
-        <% if current_user&.admin? %>
-          <%= link_to 'Editar', edit_admin_pet_path(@pet), class: 'btn btn-primary' %>
-        <% end %>
-        
-        <% if current_user && !current_user.admin? %>
-          <% if @pet.adoptions.where(user_id: current_user.id, status: 'pending').exists? %>
-            <span class="btn btn-warning disabled">Solicitud pendiente</span>
-          <% elsif @pet.adoptions.where(user_id: current_user.id, status: 'approved').exists? %>
-            <span class="btn btn-success disabled">Adopción aprobada</span>
-          <% elsif @pet.adoptions.where(user_id: current_user.id, status: 'rejected').exists? %>
-            <span class="btn btn-danger disabled">Solicitud rechazada</span>
-          <% else %>
-            <%= link_to 'Solicitar Adopción', new_pet_adoption_path(@pet), class: 'btn btn-success' %>
-          <% end %>
-        <% end %>
       </div>
     </div>
   </div>
